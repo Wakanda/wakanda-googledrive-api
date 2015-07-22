@@ -1,20 +1,12 @@
+var tools	= require('./tools');
 var core	= require('./index');
 
-function send(method, url)
+/**
+ * https://developers.google.com/drive/v2/reference/files/get
+ */
+exports.getFile = function getFile(fileId, optionalParams)
 {
-	var access_token = core.getAccessToken();
-	var xhr = new XMLHttpRequest();
-    xhr.open( method , url , false );
-    xhr.setRequestHeader( 'Authorization' , 'Bearer '+ access_token);
-    xhr.send();
-	
-	return JSON.parse( xhr.responseText );
-}
-
-
-exports.getFile = function getFile()
-{
-	
+	return tools.send('GET' , 'https://www.googleapis.com/drive/v2/files/'+ fileId, optionalParams );
 }
 
 exports.insertFile = function insertFile()
@@ -37,14 +29,17 @@ exports.copyFile = function copyFile()
 	
 }
 
-exports.deleteFile = function deleteFile()
+exports.deleteFile = function deleteFile(fileId)
 {
-	
+	return tools.send('DELETE' , 'https://www.googleapis.com/drive/v2/files/'+ fileId );	
 }
 
-exports.listFiles = function listFiles()
+/**
+ * https://developers.google.com/drive/v2/reference/files/list
+ */
+exports.listFiles = function listFiles(optionalParams)
 {
-	return send('GET' , 'https://www.googleapis.com/drive/v2/files');
+	return tools.send('GET' , 'https://www.googleapis.com/drive/v2/files', optionalParams );
 }
 
 exports.touchFile = function touchFile()

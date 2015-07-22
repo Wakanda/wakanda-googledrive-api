@@ -1,3 +1,4 @@
+var tools	= require('./tools');
 var core	= require('./index');
 
 exports.getParent = function getParent()
