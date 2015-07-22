@@ -1,3 +1,4 @@
+var core	= require('./index');
 
 /**
  * Send XHR request to googleDrive with parameters
@@ -36,3 +37,6 @@ function jsonToUrlString( params )
     }
     return body;
 }
+
+exports.send = send;
+exports.jsonToUrlString = jsonToUrlString;

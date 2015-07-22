@@ -1,5 +1,4 @@
 var tools	= require('./tools');
-var core	= require('./index');
 
 /**
  * https://developers.google.com/drive/v2/reference/files/get
