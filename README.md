@@ -1,6 +1,7 @@
 # wakanda-googledrive-api
 
-A SSJS module for wakanda which provides a Google Drive connector through SSJS APIs. This module requires `wakanda-oauth2` for authentification.
+A SSJS module for wakanda which provides a Google Drive connector through SSJS APIs.
+This module requires `wakanda-oauth2` for authentification.
 
 ##How To
 
@@ -9,6 +10,26 @@ A SSJS module for wakanda which provides a Google Drive connector through SSJS A
 
 ```javascript
 var drive = require('googledrive-api');
-drive.setAccessToken('my oauth2 access_token retrieved using the wakanda-oauth2 modules');
-drive.files.listFiles();
+
+// Set the access_token given by "wakanda_oauth2" module
+drive.setAccessToken('ya29.uQE7Wc3aVPzfAJ9Poqgh4xvCvwHsZCiSBttMwemF-NpkkAWt-LVjziLpvqVGG5PClTM8_g');
+drive.listAllFiles();
+
+// Get a specific file metadata 
+drive.getFile('19KWpbnlNjZywD2QPugg1Z80oiVw0V4nIqZYXDKTkHT0');
+
+// Copy a specific file
+var myCopy = drive.copyFile('19KWpbnlNjZywD2QPugg1Z80oiVw0V4nIqZYXDKTkHT0');
+
+// Delete a specific file
+drive.deleteFile(myCopy.id);
+
+myCopy = drive.copyFile('19KWpbnlNjZywD2QPugg1Z80oiVw0V4nIqZYXDKTkHT0');
+// Trash/untrash a file
+drive.trashFile(myCopy.id);
+drive.untrashFile(myCopy.id);
+
+// Trash a file then empty the trash. Equivalent to deleteFile()
+drive.trashFile(myCopy.id);
+drive.emptyTrash();
 ```

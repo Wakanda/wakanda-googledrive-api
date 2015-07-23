@@ -1,4 +1,14 @@
-var core	= require('./index');
+var access_token;
+
+/**
+ * Set the access_token retrieved from oauth2 authentification
+ * 
+ * @param {string} token - access_token
+ */
+exports.setAccessToken = function setAccessToken(token)
+{
+	access_token = token;
+}
 
 /**
  * Send XHR request to googleDrive with parameters
@@ -8,17 +18,17 @@ var core	= require('./index');
  * 
  * @return {Object} response - the JSON.parse XHR response
  */
-function send(method, url, option)
+exports.send = function send(method, url, option)
 {
     url = url + ( option ? core.jsonToUrlString(option) : '' );
-	var access_token = core.getAccessToken();
     
 	var xhr = new XMLHttpRequest();
     xhr.open( method , url, false );
     xhr.setRequestHeader( 'Authorization' , 'Bearer '+ access_token);
     xhr.send();
 	
-	return JSON.parse( xhr.responseText );
+    if (xhr.responseText)
+	   return JSON.parse( xhr.responseText );
 }
 
 /**
@@ -28,15 +38,12 @@ function send(method, url, option)
  * 
  * @return {string} body - the stringify params to append inside a body XHR
  */
-function jsonToUrlString( params )
+exports.jsonToUrlString = function jsonToUrlString( params )
 {
-	var body = "?";
+	var body = '?';
     for ( var key in params )
     {
     	body += key + '=' + encodeURIComponent( params[ key ] ) + '&'
     }
     return body;
 }
-
-exports.send = send;
-exports.jsonToUrlString = jsonToUrlString;
