@@ -28,7 +28,7 @@ function send(method, url, body, options)
     xhr.setRequestHeader( 'Authorization' , 'Bearer '+ access_token);
     xhr.setRequestHeader( 'Content-Type' , 'application/json' );
     xhr.send(body);
-	debugger;
+
     if (xhr.responseText)
 	   return JSON.parse( xhr.responseText );
 }
