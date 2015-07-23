@@ -12,7 +12,9 @@ This module requires `wakanda-oauth2` for authentification.
 var drive = require('googledrive-api');
 
 // Set the access_token given by "wakanda_oauth2" module
-drive.setAccessToken('ya29.uQE7Wc3aVPzfAJ9Poqgh4xvCvwHsZCiSBttMwemF-NpkkAWt-LVjziLpvqVGG5PClTM8_g');
+drive.setAccessToken('ya29.uQEttXJ6-nl2OjIjO1BFA1cQXOaV5HCNfb29mmqU_ptYPSCtPVHaZnSD9VSonu6ButeH');
+
+// List all files in google drive
 drive.listAllFiles();
 
 // Get a specific file metadata 
@@ -24,8 +26,13 @@ var myCopy = drive.copyFile('19KWpbnlNjZywD2QPugg1Z80oiVw0V4nIqZYXDKTkHT0');
 // Delete a specific file
 drive.deleteFile(myCopy.id);
 
+// Rename a file
 myCopy = drive.copyFile('19KWpbnlNjZywD2QPugg1Z80oiVw0V4nIqZYXDKTkHT0');
+drive.renameFile(myCopy.id, 'toto');
+drive.deleteFile(myCopy.id);
+
 // Trash/untrash a file
+myCopy = drive.copyFile('19KWpbnlNjZywD2QPugg1Z80oiVw0V4nIqZYXDKTkHT0');
 drive.trashFile(myCopy.id);
 drive.untrashFile(myCopy.id);
 

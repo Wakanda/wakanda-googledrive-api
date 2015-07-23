@@ -1,4 +1,4 @@
-var tools	= require('./tools');
+var tools = require('./tools');
 
 /**
  * Set the access_token retrieved from oauth2 authentification
@@ -92,4 +92,15 @@ exports.untrashFile = function untrashFile(fileId)
 exports.emptyTrash = function emptyTrash()
 {
 	return tools.send('DELETE', 'https://www.googleapis.com/drive/v2/files/trash');
+}
+
+/**
+ * Gets a file's metadata by ID. Keep the same file extension
+ * 
+ * @param {string} fileId - Google Drive file ID
+ */
+exports.renameFile = function renameFile(fileId, fileName)
+{
+	var requestBody = {'title': decodeURIComponent(fileName)};
+	return tools.send('PUT', 'https://www.googleapis.com/drive/v2/files/'+ fileId, requestBody);
 }

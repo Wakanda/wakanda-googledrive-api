@@ -18,15 +18,17 @@ exports.setAccessToken = function setAccessToken(token)
  * 
  * @return {Object} response - the JSON.parse XHR response
  */
-exports.send = function send(method, url, option)
+function send(method, url, body, options)
 {
-    url = url + ( option ? core.jsonToUrlString(option) : '' );
+    body = body ? JSON.stringify(body) : '';
+    options = options ? jsonToUrlString(options) : '';
     
 	var xhr = new XMLHttpRequest();
-    xhr.open( method , url, false );
+    xhr.open( method , url+'?'+options, false );
     xhr.setRequestHeader( 'Authorization' , 'Bearer '+ access_token);
-    xhr.send();
-	
+    xhr.setRequestHeader( 'Content-Type' , 'application/json' );
+    xhr.send(body);
+	debugger;
     if (xhr.responseText)
 	   return JSON.parse( xhr.responseText );
 }
@@ -38,12 +40,15 @@ exports.send = function send(method, url, option)
  * 
  * @return {string} body - the stringify params to append inside a body XHR
  */
-exports.jsonToUrlString = function jsonToUrlString( params )
+function jsonToUrlString( params )
 {
-	var body = '?';
+	var body = '';
     for ( var key in params )
     {
     	body += key + '=' + encodeURIComponent( params[ key ] ) + '&'
     }
     return body;
 }
+
+exports.send = send;
+exports.jsonToUrlString = jsonToUrlString;
