@@ -12,7 +12,7 @@ This module requires `wakanda-oauth2` for authentification.
 ```javascript
 // For test needs, it is possible to get an access_token through google playground: https://developers.google.com/oauthplayground/
 // It is mandatory to create a google app before using google playground: https://console.developers.google.com/project/
-var myAccessToken = 'ya29.ugEBEbgx7sqj2ggxqq7GCqv5E329OADwfBPpjiJ7CgSzfbonRxihBgOvuLSLEgt_ArA2';
+var myAccessToken = 'ya29.ugHQa7UHqTDTgiYlXIR6U4LwPS3O6s5COejguhX5V3bROS_gUPCzir5H1UjX33ModB3y';
 
 // Require the "googledrive-api" module
 var drive = require('googledrive-api');
@@ -45,4 +45,18 @@ drive.untrashFile(myCreatedFile.id);
 // Trash a file then empty the trash. Equivalent to deleteFile()
 drive.trashFile(myCreatedFile.id);
 drive.emptyTrash();
+
+// List all elements
+var myAllElementsInRoot = drive.listElementsInFolder();
+var myAllElementsInFolder = drive.listElementsInFolder('0B4SscfHkBrxJZEtsaU90OGR1Qmc');
+
+// Create a folder
+var myCreatedFolderInRoot = drive.createFolder('createdFolder');
+var myCreatedFolderInFolder = drive.createFolder('createdFolder', myCreatedFolderInRoot.id);
+
+// Rename a folder
+var myRenamedFolder = drive.renameFolder(myCreatedFolderInRoot.id, 'renamedFolder');
+
+// Delete a folder
+drive.deleteFolder(myRenamedFolder.id);
 ```

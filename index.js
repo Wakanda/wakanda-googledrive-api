@@ -165,3 +165,13 @@ exports.renameFolder = function renameFolder(folderId, folderName)
 	var requestBody = {'title': decodeURIComponent(folderName)};
 	return tools.send('PUT', 'https://www.googleapis.com/drive/v2/files/'+ folderId, requestBody);
 }
+
+/**
+ * Permanently deletes a folder by its ID and all its content (files and folders). Skips the trash. The currently authenticated user must own the file.
+ * 
+ * @param {string} folderId - Google Drive folder ID
+ */
+exports.deleteFolder = function deleteFolder(folderId)
+{
+	return tools.send('DELETE', 'https://www.googleapis.com/drive/v2/files/'+ folderId );	
+}
