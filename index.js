@@ -123,12 +123,28 @@ Drive.prototype.renameFile = function renameFile(fileId, fileName)
  * Create an empty file.
  * 
  * @param {string} fileName - Google Drive file name (ex: fibonacci.js)
+ * @param {string} [folderId] - [optional] Google Drive folder id. Default: 'root' 
  * @return {Object} File resource description
  */
-Drive.prototype.createFile = function createFile(fileName)
+Drive.prototype.createFile = function createFile(fileName, folderId)
 {
 	var requestBody = {'title': decodeURIComponent(fileName)};
+	if (folderId)
+		requestBody.parents = [{'id': decodeURIComponent(folderId)}];
 	return this.myTools.send('POST', 'https://www.googleapis.com/drive/v2/files', requestBody);
+};
+
+/**
+ * Create an empty file.
+ * 
+ * @param {string} fileId - Google Drive file id
+ * @param {string} [folderId] - [optional] Google Drive folder id. Default: 'root' 
+ * @return {Object} File resource description
+ */
+Drive.prototype.moveFile = function moveFile(fileId, folderId)
+{
+	var requestBody = { 'parents': [ {'id': decodeURIComponent(folderId)} ]};
+	return this.myTools.send('PUT', 'https://www.googleapis.com/drive/v2/files/'+fileId, requestBody);
 };
 
 /**

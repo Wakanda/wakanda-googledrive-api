@@ -58,6 +58,10 @@ var myCreatedFolderInFolder = myDrive.createFolder('createdFolder', myCreatedFol
 // Rename a folder
 var myRenamedFolder = myDrive.renameFolder(myCreatedFolderInRoot.id, 'renamedFolder');
 
+// Move a file
+var myCreatedFileInFolder = myDrive.createFile('movedFile.js', myRenamedFolder.id);
+var myMovedFile = myDrive.moveFile(myCreatedFileInFolder.id, myCreatedFolderInFolder.id);
+
 // Delete a folder
 myDrive.deleteFolder(myRenamedFolder.id);
 ```
