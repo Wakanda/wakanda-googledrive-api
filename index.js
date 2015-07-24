@@ -100,9 +100,10 @@ exports.emptyTrash = function emptyTrash()
 }
 
 /**
- * Gets a file's metadata by ID. Keep the same file extension.
+ * Rename a file. Keep the same file extension.
  * 
  * @param {string} fileId - Google Drive file ID
+ * @param {string} fileName - The new file name to apply
  */
 exports.renameFile = function renameFile(fileId, fileName)
 {
@@ -120,4 +121,47 @@ exports.createFile = function createFile(fileName)
 {
 	var requestBody = {'title': decodeURIComponent(fileName)};
 	return tools.send('POST', 'https://www.googleapis.com/drive/v2/files', requestBody);
+}
+
+/**
+ * List all elements (file or folder) in a folder.
+ * 
+ * @param {string} [folderId] - [optional] Google Drive folder id. Default: 'root' 
+ * @return {Object} File resource descriptions
+ */
+exports.listElementsInFolder = function listElementsInFolder(folderId)
+{
+	folderId = folderId ? folderId : 'root';
+	return tools.send('GET', 'https://www.googleapis.com/drive/v2/files/'+ folderId +'/children');
+}
+
+/**
+ * List all elements (file or folder) in a folder.
+ * 
+ * @param {string} folderName - Google Drive folder name
+ * @param {string} [folderId] - [optional] Google Drive folder id. Default: 'root' 
+ * @return {Object} File resource descriptions
+ */
+exports.createFolder = function createFolder(folderName, folderId)
+{
+	var requestBody = {
+		'title': decodeURIComponent(folderName),
+		'mimeType': 'application/vnd.google-apps.folder'
+	};
+	if (folderId)
+		requestBody.parents = [{'id': decodeURIComponent(folderId)}];
+		
+	return tools.send('POST', 'https://www.googleapis.com/drive/v2/files', requestBody);
+}
+
+/**
+ * Gets a file's metadata by ID. No extension or it will be consider as a file.
+ * 
+ * @param {string} folderId - Google Drive folder ID
+ * @param {string} folderName - The new folder name to apply
+ */
+exports.renameFolder = function renameFolder(folderId, folderName)
+{
+	var requestBody = {'title': decodeURIComponent(folderName)};
+	return tools.send('PUT', 'https://www.googleapis.com/drive/v2/files/'+ folderId, requestBody);
 }
