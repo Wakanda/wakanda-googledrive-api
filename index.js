@@ -1,11 +1,19 @@
-var tools = require('./tools');
+
+var Drive = function()
+{
+	var Tools = require('./tools');
+	this.myTools = new Tools();
+};
+module.exports = Drive;
 
 /**
  * Set the access_token retrieved from oauth2 authentification
  * 
  * @param {string} token - access_token
  */
-exports.setAccessToken = tools.setAccessToken;
+Drive.prototype.setAccessToken = function setAccessToken(access_token) {
+	this.myTools.setAccessToken(access_token);
+}
 
 /**
  * Gets a file's metadata by ID
@@ -13,9 +21,9 @@ exports.setAccessToken = tools.setAccessToken;
  * @param {string} fileId - Google Drive file ID
  * @return {Object} File resource description
  */
-exports.getFile = function getFile(fileId)
+Drive.prototype.getFile = function getFile(fileId)
 {
-	return tools.send('GET', 'https://www.googleapis.com/drive/v2/files/'+ fileId );
+	return this.myTools.send('GET', 'https://www.googleapis.com/drive/v2/files/'+ fileId );
 };
 
 /**
@@ -24,9 +32,9 @@ exports.getFile = function getFile(fileId)
  * @param {string} fileId - Google Drive file ID
  * @return {Object} File resource description
  */
-exports.copyFile = function copyFile(fileId)
+Drive.prototype.copyFile = function copyFile(fileId)
 {
-	return tools.send('POST', 'https://www.googleapis.com/drive/v2/files/'+ fileId +'/copy');
+	return this.myTools.send('POST', 'https://www.googleapis.com/drive/v2/files/'+ fileId +'/copy');
 };
 
 /**
@@ -34,9 +42,9 @@ exports.copyFile = function copyFile(fileId)
  * 
  * @param {string} fileId - Google Drive file ID
  */
-exports.convertFileToGoogleFormat = function copyFile(fileId)
+Drive.prototype.convertFileToGoogleFormat = function copyFile(fileId)
 {
-	return tools.send('POST', 'https://www.googleapis.com/drive/v2/files/'+ fileId +'/copy?convert=true');
+	return this.myTools.send('POST', 'https://www.googleapis.com/drive/v2/files/'+ fileId +'/copy?convert=true');
 };
 
 /**
@@ -44,9 +52,9 @@ exports.convertFileToGoogleFormat = function copyFile(fileId)
  * 
  * @param {string} fileId - Google Drive file ID
  */
-exports.deleteFile = function deleteFile(fileId)
+Drive.prototype.deleteFile = function deleteFile(fileId)
 {
-	return tools.send('DELETE', 'https://www.googleapis.com/drive/v2/files/'+ fileId );	
+	return this.myTools.send('DELETE', 'https://www.googleapis.com/drive/v2/files/'+ fileId );	
 };
 
 /**
@@ -56,9 +64,9 @@ exports.deleteFile = function deleteFile(fileId)
  * @param {string} query - query string as describe in google drive api
  * @return {Object} File resource description
  */
-exports.queryFile = function queryFile(query)
+Drive.prototype.queryFile = function queryFile(query)
 {
-	return tools.send('GET', 'https://www.googleapis.com/drive/v2/files?q='+ encodeURIComponent(query) );	
+	return this.myTools.send('GET', 'https://www.googleapis.com/drive/v2/files?q='+ encodeURIComponent(query) );	
 };
 
 /**
@@ -66,9 +74,9 @@ exports.queryFile = function queryFile(query)
  * 
  * @return {Object} File resource descriptions
  */
-exports.listAllFiles = function listAllFiles()
+Drive.prototype.listAllFiles = function listAllFiles()
 {
-	return tools.send('GET', 'https://www.googleapis.com/drive/v2/files' );
+	return this.myTools.send('GET', 'https://www.googleapis.com/drive/v2/files' );
 };
 
 /**
@@ -76,9 +84,9 @@ exports.listAllFiles = function listAllFiles()
  * 
  * @param {string} fileId - Google Drive file ID
  */
-exports.trashFile = function trashFile(fileId)
+Drive.prototype.trashFile = function trashFile(fileId)
 {
-	return tools.send('POST', 'https://www.googleapis.com/drive/v2/files/'+ fileId +'/trash');
+	return this.myTools.send('POST', 'https://www.googleapis.com/drive/v2/files/'+ fileId +'/trash');
 };
 
 /**
@@ -86,17 +94,17 @@ exports.trashFile = function trashFile(fileId)
  * 
  * @param {string} fileId - Google Drive file ID
  */
-exports.untrashFile = function untrashFile(fileId)
+Drive.prototype.untrashFile = function untrashFile(fileId)
 {
-	return tools.send('POST', 'https://www.googleapis.com/drive/v2/files/'+ fileId +'/untrash');	
+	return this.myTools.send('POST', 'https://www.googleapis.com/drive/v2/files/'+ fileId +'/untrash');	
 };
 
 /**
  * Permanently deletes all of the user's trashed files.
  */
-exports.emptyTrash = function emptyTrash()
+Drive.prototype.emptyTrash = function emptyTrash()
 {
-	return tools.send('DELETE', 'https://www.googleapis.com/drive/v2/files/trash');
+	return this.myTools.send('DELETE', 'https://www.googleapis.com/drive/v2/files/trash');
 };
 
 /**
@@ -105,10 +113,10 @@ exports.emptyTrash = function emptyTrash()
  * @param {string} fileId - Google Drive file ID
  * @param {string} fileName - The new file name to apply
  */
-exports.renameFile = function renameFile(fileId, fileName)
+Drive.prototype.renameFile = function renameFile(fileId, fileName)
 {
 	var requestBody = {'title': decodeURIComponent(fileName)};
-	return tools.send('PUT', 'https://www.googleapis.com/drive/v2/files/'+ fileId, requestBody);
+	return this.myTools.send('PUT', 'https://www.googleapis.com/drive/v2/files/'+ fileId, requestBody);
 };
 
 /**
@@ -117,10 +125,10 @@ exports.renameFile = function renameFile(fileId, fileName)
  * @param {string} fileName - Google Drive file name (ex: fibonacci.js)
  * @return {Object} File resource description
  */
-exports.createFile = function createFile(fileName)
+Drive.prototype.createFile = function createFile(fileName)
 {
 	var requestBody = {'title': decodeURIComponent(fileName)};
-	return tools.send('POST', 'https://www.googleapis.com/drive/v2/files', requestBody);
+	return this.myTools.send('POST', 'https://www.googleapis.com/drive/v2/files', requestBody);
 };
 
 /**
@@ -129,10 +137,10 @@ exports.createFile = function createFile(fileName)
  * @param {string} [folderId] - [optional] Google Drive folder id. Default: 'root' 
  * @return {Object} File resource descriptions
  */
-exports.listElementsInFolder = function listElementsInFolder(folderId)
+Drive.prototype.listElementsInFolder = function listElementsInFolder(folderId)
 {
 	folderId = folderId ? folderId : 'root';
-	return tools.send('GET', 'https://www.googleapis.com/drive/v2/files/'+ folderId +'/children');
+	return this.myTools.send('GET', 'https://www.googleapis.com/drive/v2/files/'+ folderId +'/children');
 };
 
 /**
@@ -142,7 +150,7 @@ exports.listElementsInFolder = function listElementsInFolder(folderId)
  * @param {string} [folderId] - [optional] Google Drive folder id. Default: 'root' 
  * @return {Object} File resource descriptions
  */
-exports.createFolder = function createFolder(folderName, folderId)
+Drive.prototype.createFolder = function createFolder(folderName, folderId)
 {
 	var requestBody = {
 		'title': decodeURIComponent(folderName),
@@ -151,7 +159,7 @@ exports.createFolder = function createFolder(folderName, folderId)
 	if (folderId)
 		requestBody.parents = [{'id': decodeURIComponent(folderId)}];
 		
-	return tools.send('POST', 'https://www.googleapis.com/drive/v2/files', requestBody);
+	return this.myTools.send('POST', 'https://www.googleapis.com/drive/v2/files', requestBody);
 };
 
 /**
@@ -160,10 +168,10 @@ exports.createFolder = function createFolder(folderName, folderId)
  * @param {string} folderId - Google Drive folder ID
  * @param {string} folderName - The new folder name to apply
  */
-exports.renameFolder = function renameFolder(folderId, folderName)
+Drive.prototype.renameFolder = function renameFolder(folderId, folderName)
 {
 	var requestBody = {'title': decodeURIComponent(folderName)};
-	return tools.send('PUT', 'https://www.googleapis.com/drive/v2/files/'+ folderId, requestBody);
+	return this.myTools.send('PUT', 'https://www.googleapis.com/drive/v2/files/'+ folderId, requestBody);
 };
 
 /**
@@ -171,7 +179,8 @@ exports.renameFolder = function renameFolder(folderId, folderName)
  * 
  * @param {string} folderId - Google Drive folder ID
  */
-exports.deleteFolder = function deleteFolder(folderId)
+Drive.prototype.deleteFolder = function deleteFolder(folderId)
 {
-	return tools.send('DELETE', 'https://www.googleapis.com/drive/v2/files/'+ folderId );	
+	return this.myTools.send('DELETE', 'https://www.googleapis.com/drive/v2/files/'+ folderId );	
 };
+
