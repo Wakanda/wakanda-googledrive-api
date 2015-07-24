@@ -25,7 +25,7 @@ Tools.prototype.setAccessToken = function setAccessToken(token)
 Tools.prototype.send = function send(method, url, body, options)
 {
     body = body ? JSON.stringify(body) : '';
-    options = options ? jsonToUrlString(options) : '';
+    options = options ? this.jsonToUrlString(options) : '';
     
 	var xhr = new XMLHttpRequest();
     xhr.open( method , url+'?'+options, false );
