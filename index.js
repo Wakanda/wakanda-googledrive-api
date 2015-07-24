@@ -11,6 +11,7 @@ exports.setAccessToken = tools.setAccessToken;
  * Gets a file's metadata by ID
  * 
  * @param {string} fileId - Google Drive file ID
+ * @return {Object} File resource description
  */
 exports.getFile = function getFile(fileId)
 {
@@ -21,6 +22,7 @@ exports.getFile = function getFile(fileId)
  * Copy a file by ID
  * 
  * @param {string} fileId - Google Drive file ID
+ * @return {Object} File resource description
  */
 exports.copyFile = function copyFile(fileId)
 {
@@ -49,9 +51,10 @@ exports.deleteFile = function deleteFile(fileId)
 
 /**
  * Search for one or some files
+ * Help for how to create a query string: https://developers.google.com/drive/web/search-parameters
  * 
- * Help for how to create a query string
- * https://developers.google.com/drive/web/search-parameters
+ * @param {string} query - query string as describe in google drive api
+ * @return {Object} File resource description
  */
 exports.queryFile = function queryFile(query)
 {
@@ -60,6 +63,8 @@ exports.queryFile = function queryFile(query)
 
 /**
  * Lists the user's files.
+ * 
+ * @return {Object} File resource descriptions
  */
 exports.listAllFiles = function listAllFiles()
 {
@@ -95,7 +100,7 @@ exports.emptyTrash = function emptyTrash()
 }
 
 /**
- * Gets a file's metadata by ID. Keep the same file extension
+ * Gets a file's metadata by ID. Keep the same file extension.
  * 
  * @param {string} fileId - Google Drive file ID
  */
@@ -103,4 +108,16 @@ exports.renameFile = function renameFile(fileId, fileName)
 {
 	var requestBody = {'title': decodeURIComponent(fileName)};
 	return tools.send('PUT', 'https://www.googleapis.com/drive/v2/files/'+ fileId, requestBody);
+}
+
+/**
+ * Create an empty file.
+ * 
+ * @param {string} fileName - Google Drive file name (ex: fibonacci.js)
+ * @return {Object} File resource description
+ */
+exports.createFile = function createFile(fileName)
+{
+	var requestBody = {'title': decodeURIComponent(fileName)};
+	return tools.send('POST', 'https://www.googleapis.com/drive/v2/files', requestBody);
 }

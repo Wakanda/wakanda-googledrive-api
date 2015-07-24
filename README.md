@@ -10,8 +10,9 @@ This module requires `wakanda-oauth2` for authentification.
 2- In a SSJS file (ex: `test.js`), add:
 
 ```javascript
-var myAccessToken = 'ya29.uQEttXJ6-nl2OjIjO1BFA1cQXOaV5HCNfb29mmqU_ptYPSCtPVHaZnSD9VSonu6ButeH';
-var myFileId = '19KWpbnlNjZywD2QPugg1Z80oiVw0V4nIqZYXDKTkHT0';
+// For test needs, it is possible to get an access_token through google playground: https://developers.google.com/oauthplayground/
+// It is mandatory to create a google app before using google playground: https://console.developers.google.com/project/
+var myAccessToken = 'ya29.ugEBEbgx7sqj2ggxqq7GCqv5E329OADwfBPpjiJ7CgSzfbonRxihBgOvuLSLEgt_ArA2';
 
 // Require the "googledrive-api" module
 var drive = require('googledrive-api');
@@ -20,28 +21,28 @@ var drive = require('googledrive-api');
 drive.setAccessToken(myAccessToken);
 
 // List all files in google drive
-drive.listAllFiles();
+var myAllFiles = drive.listAllFiles();
+
+// Create a new file
+var myCreatedFile = drive.createFile('createdFile.js');
 
 // Get a specific file metadata 
-drive.getFile(myFileId);
-
-// Copy a specific file
-var myCopy = drive.copyFile(myFileId);
-
-// Delete a specific file
-drive.deleteFile(myCopy.id);
+var myGettedFile = drive.getFile(myCreatedFile.id);
 
 // Rename a file
-myCopy = drive.copyFile(myFileId);
-drive.renameFile(myCopy.id, 'toto');
-drive.deleteFile(myCopy.id);
+var myRenamedFile = drive.renameFile(myCreatedFile.id, 'renamedFile.js');
+
+// Copy a specific file
+var myCopiedFile = drive.copyFile(myCreatedFile.id);
+
+// Delete a specific file
+drive.deleteFile(myCopiedFile.id);
 
 // Trash/untrash a file
-myCopy = drive.copyFile(myFileId);
-drive.trashFile(myCopy.id);
-drive.untrashFile(myCopy.id);
+drive.trashFile(myCreatedFile.id);
+drive.untrashFile(myCreatedFile.id);
 
 // Trash a file then empty the trash. Equivalent to deleteFile()
-drive.trashFile(myCopy.id);
+drive.trashFile(myCreatedFile.id);
 drive.emptyTrash();
 ```
