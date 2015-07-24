@@ -8,7 +8,7 @@ var access_token;
 exports.setAccessToken = function setAccessToken(token)
 {
 	access_token = token;
-}
+};
 
 /**
  * Send XHR request to googleDrive with parameters
@@ -18,7 +18,7 @@ exports.setAccessToken = function setAccessToken(token)
  * 
  * @return {Object} response - the JSON.parse XHR response
  */
-function send(method, url, body, options)
+exports.send = function send(method, url, body, options)
 {
     body = body ? JSON.stringify(body) : '';
     options = options ? jsonToUrlString(options) : '';
@@ -31,7 +31,7 @@ function send(method, url, body, options)
 
     if (xhr.responseText)
 	   return JSON.parse( xhr.responseText );
-}
+};
 
 /**
  * Stringify params for body XHR
@@ -40,7 +40,7 @@ function send(method, url, body, options)
  * 
  * @return {string} body - the stringify params to append inside a body XHR
  */
-function jsonToUrlString( params )
+exports.jsonToUrlString = function jsonToUrlString( params )
 {
 	var body = '';
     for ( var key in params )
@@ -48,7 +48,4 @@ function jsonToUrlString( params )
     	body += key + '=' + encodeURIComponent( params[ key ] ) + '&'
     }
     return body;
-}
-
-exports.send = send;
-exports.jsonToUrlString = jsonToUrlString;
+};

@@ -16,7 +16,7 @@ exports.setAccessToken = tools.setAccessToken;
 exports.getFile = function getFile(fileId)
 {
 	return tools.send('GET', 'https://www.googleapis.com/drive/v2/files/'+ fileId );
-}
+};
 
 /**
  * Copy a file by ID
@@ -27,7 +27,7 @@ exports.getFile = function getFile(fileId)
 exports.copyFile = function copyFile(fileId)
 {
 	return tools.send('POST', 'https://www.googleapis.com/drive/v2/files/'+ fileId +'/copy');
-}
+};
 
 /**
  * Convert a file to the corresponding Google Docs format.
@@ -37,7 +37,7 @@ exports.copyFile = function copyFile(fileId)
 exports.convertFileToGoogleFormat = function copyFile(fileId)
 {
 	return tools.send('POST', 'https://www.googleapis.com/drive/v2/files/'+ fileId +'/copy?convert=true');
-}
+};
 
 /**
  * Permanently deletes a file by ID. Skips the trash. The currently authenticated user must own the file.
@@ -47,7 +47,7 @@ exports.convertFileToGoogleFormat = function copyFile(fileId)
 exports.deleteFile = function deleteFile(fileId)
 {
 	return tools.send('DELETE', 'https://www.googleapis.com/drive/v2/files/'+ fileId );	
-}
+};
 
 /**
  * Search for one or some files
@@ -59,7 +59,7 @@ exports.deleteFile = function deleteFile(fileId)
 exports.queryFile = function queryFile(query)
 {
 	return tools.send('GET', 'https://www.googleapis.com/drive/v2/files?q='+ encodeURIComponent(query) );	
-}
+};
 
 /**
  * Lists the user's files.
@@ -69,7 +69,7 @@ exports.queryFile = function queryFile(query)
 exports.listAllFiles = function listAllFiles()
 {
 	return tools.send('GET', 'https://www.googleapis.com/drive/v2/files' );
-}
+};
 
 /**
  * Moves a file to the trash.
@@ -79,7 +79,7 @@ exports.listAllFiles = function listAllFiles()
 exports.trashFile = function trashFile(fileId)
 {
 	return tools.send('POST', 'https://www.googleapis.com/drive/v2/files/'+ fileId +'/trash');
-}
+};
 
 /**
  * Restores a file from the trash.
@@ -89,7 +89,7 @@ exports.trashFile = function trashFile(fileId)
 exports.untrashFile = function untrashFile(fileId)
 {
 	return tools.send('POST', 'https://www.googleapis.com/drive/v2/files/'+ fileId +'/untrash');	
-}
+};
 
 /**
  * Permanently deletes all of the user's trashed files.
@@ -97,7 +97,7 @@ exports.untrashFile = function untrashFile(fileId)
 exports.emptyTrash = function emptyTrash()
 {
 	return tools.send('DELETE', 'https://www.googleapis.com/drive/v2/files/trash');
-}
+};
 
 /**
  * Rename a file. Keep the same file extension.
@@ -109,7 +109,7 @@ exports.renameFile = function renameFile(fileId, fileName)
 {
 	var requestBody = {'title': decodeURIComponent(fileName)};
 	return tools.send('PUT', 'https://www.googleapis.com/drive/v2/files/'+ fileId, requestBody);
-}
+};
 
 /**
  * Create an empty file.
@@ -121,7 +121,7 @@ exports.createFile = function createFile(fileName)
 {
 	var requestBody = {'title': decodeURIComponent(fileName)};
 	return tools.send('POST', 'https://www.googleapis.com/drive/v2/files', requestBody);
-}
+};
 
 /**
  * List all elements (file or folder) in a folder.
@@ -133,7 +133,7 @@ exports.listElementsInFolder = function listElementsInFolder(folderId)
 {
 	folderId = folderId ? folderId : 'root';
 	return tools.send('GET', 'https://www.googleapis.com/drive/v2/files/'+ folderId +'/children');
-}
+};
 
 /**
  * List all elements (file or folder) in a folder.
@@ -152,7 +152,7 @@ exports.createFolder = function createFolder(folderName, folderId)
 		requestBody.parents = [{'id': decodeURIComponent(folderId)}];
 		
 	return tools.send('POST', 'https://www.googleapis.com/drive/v2/files', requestBody);
-}
+};
 
 /**
  * Gets a file's metadata by ID. No extension or it will be consider as a file.
@@ -164,7 +164,7 @@ exports.renameFolder = function renameFolder(folderId, folderName)
 {
 	var requestBody = {'title': decodeURIComponent(folderName)};
 	return tools.send('PUT', 'https://www.googleapis.com/drive/v2/files/'+ folderId, requestBody);
-}
+};
 
 /**
  * Permanently deletes a folder by its ID and all its content (files and folders). Skips the trash. The currently authenticated user must own the file.
@@ -174,4 +174,4 @@ exports.renameFolder = function renameFolder(folderId, folderName)
 exports.deleteFolder = function deleteFolder(folderId)
 {
 	return tools.send('DELETE', 'https://www.googleapis.com/drive/v2/files/'+ folderId );	
-}
+};
