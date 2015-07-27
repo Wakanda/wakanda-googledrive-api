@@ -6,23 +6,10 @@
  */
 var Tools = function(myBaseUrl)
 {
-    myBaseUrl = myBaseUrl ? myBaseUrl : 'https://www.googleapis.com/drive/v2'
-    myBaseUrl = myBaseUrl.replace(/[\\/]+$/, ''); // Remove ending / or \
-    this.baseUrl = myBaseUrl +'/';
+    this.baseUrl = myBaseUrl ? myBaseUrl : 'https://www.googleapis.com/drive/v2/'
     this.access_token;
 };
 module.exports = Tools;
-
-/**
- * Set the baseUrl for XHR request to googleDrive
- * 
- * @param {string} baseUrl - access_token
- */
-Tools.prototype.setBaseUrl = function setBaseUrl(myBaseUrl)
-{
-    myBaseUrl = myBaseUrl.replace(/[\\/]+$/, ''); // Remove ending / or \
-	this.baseUrl = myBaseUrl +'/';
-};
 
 /**
  * Set the access_token retrieved from oauth2 authentification
@@ -46,8 +33,6 @@ Tools.prototype.send = function send(method, url, body, options)
 {
     body = body ? JSON.stringify(body) : '';
     options = options ? this.jsonToUrlString(options) : '';
-    url = url.replace(/^[\\/]+/, ''); // Remove starting / or \
-
     
 	var xhr = new XMLHttpRequest();
     xhr.open( method , this.baseUrl + url +'?'+ options, false );
