@@ -1,8 +1,28 @@
-var Tools = function()
+
+/**
+ * Tools constructor. Private module for GoogleDrive module. 
+ * 
+ * @param {string} [baseUrl] - Set the baseUrl for XHR request to Google Drive API. Default: https://www.googleapis.com/drive/v2/
+ */
+var Tools = function(myBaseUrl)
 {
+    myBaseUrl = myBaseUrl ? myBaseUrl : 'https://www.googleapis.com/drive/v2'
+    myBaseUrl = myBaseUrl.replace(/[\\/]+$/, ''); // Remove ending / or \
+    this.baseUrl = myBaseUrl +'/';
     this.access_token;
 };
 module.exports = Tools;
+
+/**
+ * Set the baseUrl for XHR request to googleDrive
+ * 
+ * @param {string} baseUrl - access_token
+ */
+Tools.prototype.setBaseUrl = function setBaseUrl(myBaseUrl)
+{
+    myBaseUrl = myBaseUrl.replace(/[\\/]+$/, ''); // Remove ending / or \
+	this.baseUrl = myBaseUrl +'/';
+};
 
 /**
  * Set the access_token retrieved from oauth2 authentification
@@ -26,9 +46,11 @@ Tools.prototype.send = function send(method, url, body, options)
 {
     body = body ? JSON.stringify(body) : '';
     options = options ? this.jsonToUrlString(options) : '';
+    url = url.replace(/^[\\/]+/, ''); // Remove starting / or \
+
     
 	var xhr = new XMLHttpRequest();
-    xhr.open( method , url+'?'+options, false );
+    xhr.open( method , this.baseUrl + url +'?'+ options, false );
     xhr.setRequestHeader( 'Authorization' , 'Bearer '+ this.access_token);
     xhr.setRequestHeader( 'Content-Type' , 'application/json' );
     xhr.send(body);
