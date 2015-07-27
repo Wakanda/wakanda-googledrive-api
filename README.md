@@ -12,7 +12,7 @@ This module requires `wakanda-oauth2` for authentification.
 ```javascript
 // For test needs, it is possible to get an access_token through google playground: https://developers.google.com/oauthplayground/
 // It is mandatory to create a google app before using google playground: https://console.developers.google.com/project/
-var myAccessToken = 'ya29.ugEh6Gpz7kMfOzXtU9uNYZVVHYu6_8d5nZiW065syWIT8gfWERMx3TqqS8fTorc-qdDh';
+var myAccessToken = 'ya29.vQE1gFjX7cTDi7X1uFo357k3DJsLuyTG3OMeE6EBukP9xWGYiiQxusNj5tf27LQcmXOT';
 
 // Require the "googledrive-api" module
 var Drive = require('googledrive-api');
@@ -27,7 +27,7 @@ var myAllFiles = myDrive.listAllFiles();
 // Create a new file
 var myCreatedFile = myDrive.createFile('createdFile.js');
 
-// Get a specific file metadata 
+// Get a file metadata 
 var myGettedFile = myDrive.getFile(myCreatedFile.id);
 
 // Rename a file
@@ -61,6 +61,10 @@ var myRenamedFolder = myDrive.renameFolder(myCreatedFolderInRoot.id, 'renamedFol
 // Move a file
 var myCreatedFileInFolder = myDrive.createFile('movedFile.js', myRenamedFolder.id);
 var myMovedFile = myDrive.moveFile(myCreatedFileInFolder.id, myCreatedFolderInFolder.id);
+
+// Trash/Untrash a folder
+var myTrashedFolder = myDrive.trashFolder(myCreatedFolderInRoot.id);
+var myUntrashedFolder = myDrive.untrashFolder(myTrashedFolder.id);
 
 // Delete a folder
 myDrive.deleteFolder(myRenamedFolder.id);

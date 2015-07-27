@@ -14,15 +14,16 @@ module.exports = Drive;
  * 
  * @param {string} token - access_token
  */
-Drive.prototype.setAccessToken = function setAccessToken(access_token) {
+Drive.prototype.setAccessToken = function setAccessToken(access_token)
+{
 	this.myTools.setAccessToken(access_token);
-}
+};
 
 /**
  * Gets a file's metadata by ID
  * 
  * @param {string} fileId - Google Drive file ID
- * @return {Object} File resource description
+ * @return {Object} File resource description - https://developers.google.com/drive/v2/reference/files
  */
 Drive.prototype.getFile = function getFile(fileId)
 {
@@ -33,7 +34,7 @@ Drive.prototype.getFile = function getFile(fileId)
  * Copy a file by ID
  * 
  * @param {string} fileId - Google Drive file ID
- * @return {Object} File resource description
+ * @return {Object} File resource description - https://developers.google.com/drive/v2/reference/files
  */
 Drive.prototype.copyFile = function copyFile(fileId)
 {
@@ -65,7 +66,16 @@ Drive.prototype.deleteFile = function deleteFile(fileId)
  * Help for how to create a query string: https://developers.google.com/drive/web/search-parameters
  * 
  * @param {string} query - query string as describe in google drive api
- * @return {Object} File resource description
+ * @return {Object} {
+  "kind": "drive#fileList",
+  "etag": etag,
+  "selfLink": string,
+  "nextPageToken": string,
+  "nextLink": string,
+  "items": [
+    files Resource https://developers.google.com/drive/v2/reference/files
+  ]
+}
  */
 Drive.prototype.queryFile = function queryFile(query)
 {
@@ -75,7 +85,16 @@ Drive.prototype.queryFile = function queryFile(query)
 /**
  * Lists the user's files.
  * 
- * @return {Object} File resource descriptions
+ * @return {Object} {
+  "kind": "drive#fileList",
+  "etag": etag,
+  "selfLink": string,
+  "nextPageToken": string,
+  "nextLink": string,
+  "items": [
+    files Resource https://developers.google.com/drive/v2/reference/files
+  ]
+}
  */
 Drive.prototype.listAllFiles = function listAllFiles()
 {
@@ -86,6 +105,7 @@ Drive.prototype.listAllFiles = function listAllFiles()
  * Moves a file to the trash.
  * 
  * @param {string} fileId - Google Drive file ID
+ * @return {Object} File resource description - https://developers.google.com/drive/v2/reference/files
  */
 Drive.prototype.trashFile = function trashFile(fileId)
 {
@@ -96,6 +116,7 @@ Drive.prototype.trashFile = function trashFile(fileId)
  * Restores a file from the trash.
  * 
  * @param {string} fileId - Google Drive file ID
+ * @return {Object} File resource description - https://developers.google.com/drive/v2/reference/files
  */
 Drive.prototype.untrashFile = function untrashFile(fileId)
 {
@@ -115,6 +136,7 @@ Drive.prototype.emptyTrash = function emptyTrash()
  * 
  * @param {string} fileId - Google Drive file ID
  * @param {string} fileName - The new file name to apply
+ * @return {Object} File resource description - https://developers.google.com/drive/v2/reference/files
  */
 Drive.prototype.renameFile = function renameFile(fileId, fileName)
 {
@@ -127,7 +149,7 @@ Drive.prototype.renameFile = function renameFile(fileId, fileName)
  * 
  * @param {string} fileName - Google Drive file name (ex: fibonacci.js)
  * @param {string} [folderId] - [optional] Google Drive folder id. Default: 'root' 
- * @return {Object} File resource description
+ * @return {Object} File resource description - https://developers.google.com/drive/v2/reference/files
  */
 Drive.prototype.createFile = function createFile(fileName, folderId)
 {
@@ -138,11 +160,11 @@ Drive.prototype.createFile = function createFile(fileName, folderId)
 };
 
 /**
- * Create an empty file.
+ * Move a file into a folder.
  * 
  * @param {string} fileId - Google Drive file id
  * @param {string} [folderId] - [optional] Google Drive folder id. Default: 'root' 
- * @return {Object} File resource description
+ * @return {Object} File resource description - https://developers.google.com/drive/v2/reference/files
  */
 Drive.prototype.moveFile = function moveFile(fileId, folderId)
 {
@@ -154,7 +176,16 @@ Drive.prototype.moveFile = function moveFile(fileId, folderId)
  * List all elements (file or folder) in a folder.
  * 
  * @param {string} [folderId] - [optional] Google Drive folder id. Default: 'root' 
- * @return {Object} File resource descriptions
+ * @return {Object} {
+  "kind": "drive#childList",
+  "etag": etag,
+  "selfLink": string,
+  "nextPageToken": string,
+  "nextLink": string,
+  "items": [
+    children Resource https://developers.google.com/drive/v2/reference/children#resource
+  ]
+}
  */
 Drive.prototype.listElementsInFolder = function listElementsInFolder(folderId)
 {
@@ -167,7 +198,7 @@ Drive.prototype.listElementsInFolder = function listElementsInFolder(folderId)
  * 
  * @param {string} folderName - Google Drive folder name
  * @param {string} [folderId] - [optional] Google Drive folder id. Default: 'root' 
- * @return {Object} File resource descriptions
+ * @return {Object} File resource description - https://developers.google.com/drive/v2/reference/files
  */
 Drive.prototype.createFolder = function createFolder(folderName, folderId)
 {
@@ -186,6 +217,7 @@ Drive.prototype.createFolder = function createFolder(folderName, folderId)
  * 
  * @param {string} folderId - Google Drive folder ID
  * @param {string} folderName - The new folder name to apply
+ * @return {Object} File resource description - https://developers.google.com/drive/v2/reference/files
  */
 Drive.prototype.renameFolder = function renameFolder(folderId, folderName)
 {
@@ -203,3 +235,24 @@ Drive.prototype.deleteFolder = function deleteFolder(folderId)
 	return this.myTools.send('DELETE', 'files/'+ folderId );	
 };
 
+/**
+ * Moves a folder to the trash.
+ * 
+ * @param {string} folderId - Google Drive folder ID
+ * @return {Object} File resource description - https://developers.google.com/drive/v2/reference/files
+ */
+Drive.prototype.trashFolder = function trashFolder(folderId)
+{
+	return this.myTools.send('POST', 'files/'+ folderId +'/trash');
+};
+
+/**
+ * Restores a folder from the trash.
+ * 
+ * @param {string} folderId - Google Drive folder ID
+ * @return {Object} File resource description - https://developers.google.com/drive/v2/reference/files
+ */
+Drive.prototype.untrashFolder = function untrashFolder(folderId)
+{
+	return this.myTools.send('POST', 'files/'+ folderId +'/untrash');	
+};

@@ -6,7 +6,7 @@
  */
 var Tools = function(myBaseUrl)
 {
-    this.baseUrl = myBaseUrl ? myBaseUrl : 'https://www.googleapis.com/drive/v2/'
+    this.baseUrl = myBaseUrl ? myBaseUrl : 'https://www.googleapis.com/drive/v2/';
     this.access_token;
 };
 module.exports = Tools;
