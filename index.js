@@ -12,7 +12,7 @@ module.exports = Drive;
 /**
  * Set the access_token retrieved from oauth2 authentification
  * 
- * @param {string} token - access_token
+ * @param {string} access_token
  */
 Drive.prototype.setAccessToken = function setAccessToken(access_token)
 {
@@ -46,7 +46,7 @@ Drive.prototype.copyFile = function copyFile(fileId)
  * 
  * @param {string} fileId - Google Drive file ID
  */
-Drive.prototype.convertFileToGoogleFormat = function copyFile(fileId)
+Drive.prototype.convertFileToGoogleFormat = function convertFileToGoogleFormat(fileId)
 {
 	return this.myTools.send('POST', 'files/'+ fileId +'/copy?convert=true');
 };
@@ -168,6 +168,7 @@ Drive.prototype.createFile = function createFile(fileName, folderId)
  */
 Drive.prototype.moveFile = function moveFile(fileId, folderId)
 {
+	folderId = folderId ? folderId : 'root';
 	var requestBody = { 'parents': [ {'id': decodeURIComponent(folderId)} ]};
 	return this.myTools.send('PUT', 'files/'+fileId, requestBody);
 };

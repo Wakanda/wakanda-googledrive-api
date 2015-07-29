@@ -24,18 +24,17 @@ Tools.prototype.setAccessToken = function setAccessToken(token)
 /**
  * Send XHR request to googleDrive with parameters
  * 
- * @param {string} method - method (POST, GET, DELETE)
+ * @param {string} method - method (POST, GET, PUT, DELETE)
  * @param {string} url - XHR url with parameters
  * 
  * @return {Object} response - the JSON.parse XHR response
  */
-Tools.prototype.send = function send(method, url, body, options)
+Tools.prototype.send = function send(method, url, body)
 {
     body = body ? JSON.stringify(body) : '';
-    options = options ? this.jsonToUrlString(options) : '';
     
 	var xhr = new XMLHttpRequest();
-    xhr.open( method , this.baseUrl + url +'?'+ options, false );
+    xhr.open( method , this.baseUrl + url, false );
     xhr.setRequestHeader( 'Authorization' , 'Bearer '+ this.access_token);
     xhr.setRequestHeader( 'Content-Type' , 'application/json' );
     xhr.send(body);
