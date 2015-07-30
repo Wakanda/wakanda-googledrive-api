@@ -27,7 +27,7 @@ Drive.prototype.setAccessToken = function setAccessToken(access_token)
  */
 Drive.prototype.getFile = function getFile(fileId)
 {
-	return this.myTools.send('GET', 'files/'+ fileId );
+	return this.myTools.send('GET', 'files/'+ fileId);
 };
 
 /**
@@ -98,7 +98,8 @@ Drive.prototype.queryFile = function queryFile(query)
  */
 Drive.prototype.listAllFiles = function listAllFiles()
 {
-	return this.myTools.send('GET', 'files' );
+	var query = encodeURIComponent("mimeType!='application/vnd.google-apps.folder'");
+	return this.myTools.send('GET', 'files?q='+ query );
 };
 
 /**
@@ -147,15 +148,18 @@ Drive.prototype.renameFile = function renameFile(fileId, fileName)
 /**
  * Create an empty file.
  * 
- * @param {string} fileName - Google Drive file name (ex: fibonacci.js)
+ * @param {string} [fileName] - [optional] Google Drive file name (ex: fibonacci.js). Default: 'Untitled' 
  * @param {string} [folderId] - [optional] Google Drive folder id. Default: 'root' 
  * @return {Object} File resource description - https://developers.google.com/drive/v2/reference/files
  */
 Drive.prototype.createFile = function createFile(fileName, folderId)
 {
-	var requestBody = {'title': decodeURIComponent(fileName)};
+	var requestBody = {};
+	if (fileName)
+		requestBody.title = decodeURIComponent(fileName);
 	if (folderId)
 		requestBody.parents = [{'id': decodeURIComponent(folderId)}];
+		
 	return this.myTools.send('POST', 'files', requestBody);
 };
 
@@ -171,6 +175,26 @@ Drive.prototype.moveFile = function moveFile(fileId, folderId)
 	folderId = folderId ? folderId : 'root';
 	var requestBody = { 'parents': [ {'id': decodeURIComponent(folderId)} ]};
 	return this.myTools.send('PUT', 'files/'+fileId, requestBody);
+};
+
+/**
+ * Lists the user's folders.
+ * 
+ * @return {Object} {
+  "kind": "drive#fileList",
+  "etag": etag,
+  "selfLink": string,
+  "nextPageToken": string,
+  "nextLink": string,
+  "items": [
+    files Resource https://developers.google.com/drive/v2/reference/files
+  ]
+}
+ */
+Drive.prototype.listAllFolders = function listAllFolders()
+{
+	var query = encodeURIComponent("mimeType='application/vnd.google-apps.folder'");
+	return this.myTools.send('GET', 'files?q='+ query );
 };
 
 /**
