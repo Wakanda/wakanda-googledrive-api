@@ -1,3 +1,4 @@
+var token = require( './token' );
 
 /**
  * GoogleDrive constructor. Starting point to use the googleDrive API.
@@ -10,13 +11,23 @@ var Drive = function()
 module.exports = Drive;
 
 /**
- * Set the access_token retrieved from oauth2 authentification
+ * Set the access_token retrieved from oauth2 authentification. For one shot or tests.
+ * For long run, it's preferable to use useAccessTokenGetter() instead.
  * 
  * @param {string} access_token
  */
 Drive.prototype.setAccessToken = function setAccessToken(access_token)
 {
 	this.myTools.setAccessToken(access_token);
+};
+
+/**
+ * Use the access_token method from token.js/getToken(). Can be use to handle the oauth2 authentification
+ * For one shot or tests, it's easier to use setAccessToken() instead.
+ */
+Drive.prototype.useAccessTokenGetter = function useAccessTokenGetter()
+{
+	this.myTools.setAccessTokenGetter(token);
 };
 
 /**
@@ -142,7 +153,7 @@ Drive.prototype.emptyTrash = function emptyTrash()
 Drive.prototype.renameFile = function renameFile(fileId, fileName)
 {
 	var requestBody = {'title': decodeURIComponent(fileName)};
-	return this.myTools.send('PUT', 'files/'+ fileId, requestBody);
+	return this.myTools.send('PUT', 'files/'+ fileId, {'body':requestBody});
 };
 
 /**
@@ -160,7 +171,7 @@ Drive.prototype.createFile = function createFile(fileName, folderId)
 	if (folderId)
 		requestBody.parents = [{'id': decodeURIComponent(folderId)}];
 		
-	return this.myTools.send('POST', 'files', requestBody);
+	return this.myTools.send('POST', 'files', {'body':requestBody});
 };
 
 /**
@@ -174,7 +185,7 @@ Drive.prototype.moveFile = function moveFile(fileId, folderId)
 {
 	folderId = folderId ? folderId : 'root';
 	var requestBody = { 'parents': [ {'id': decodeURIComponent(folderId)} ]};
-	return this.myTools.send('PUT', 'files/'+fileId, requestBody);
+	return this.myTools.send('PUT', 'files/'+fileId, {'body':requestBody});
 };
 
 /**
@@ -234,7 +245,7 @@ Drive.prototype.createFolder = function createFolder(folderName, folderId)
 	if (folderId)
 		requestBody.parents = [{'id': decodeURIComponent(folderId)}];
 		
-	return this.myTools.send('POST', 'files', requestBody);
+	return this.myTools.send('POST', 'files', {'body':requestBody});
 };
 
 /**
@@ -247,7 +258,7 @@ Drive.prototype.createFolder = function createFolder(folderName, folderId)
 Drive.prototype.renameFolder = function renameFolder(folderId, folderName)
 {
 	var requestBody = {'title': decodeURIComponent(folderName)};
-	return this.myTools.send('PUT', 'files/'+ folderId, requestBody);
+	return this.myTools.send('PUT', 'files/'+ folderId, {'body':requestBody});
 };
 
 /**
@@ -281,3 +292,11 @@ Drive.prototype.untrashFolder = function untrashFolder(folderId)
 {
 	return this.myTools.send('POST', 'files/'+ folderId +'/untrash');	
 };
+
+/*
+// TODO to check
+Drive.prototype.downloadFile = function downloadFile(fileId)
+{
+	return this.myTools.send('GET', 'files/'+ fileId + "?alt=media", null, true);
+};
+*/
