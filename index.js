@@ -11,7 +11,7 @@ var Drive = function()
 module.exports = Drive;
 
 /**
- * Set the access_token retrieved from oauth2 authentification. For one shot or tests.
+ * Set the access_token retrieved from oauth2 authentification. Better for one shot or tests.
  * For long run, it's preferable to use useAccessTokenGetter() instead.
  * 
  * @param {string} access_token
@@ -22,7 +22,8 @@ Drive.prototype.setAccessToken = function setAccessToken(access_token)
 };
 
 /**
- * Use the access_token method from token.js/getToken(). Can be use to handle the oauth2 authentification
+ * Get the access_token from token.js/getToken(). Can be use to handle the oauth2 authentification
+ * You can update the way you retreive the access_token in token.js/getToken()
  * For one shot or tests, it's easier to use setAccessToken() instead.
  */
 Drive.prototype.useAccessTokenGetter = function useAccessTokenGetter()
@@ -90,6 +91,7 @@ Drive.prototype.deleteFile = function deleteFile(fileId)
  */
 Drive.prototype.queryFile = function queryFile(query)
 {
+	query = query ? "mimeType!='application/vnd.google-apps.folder' and " + query : "mimeType!='application/vnd.google-apps.folder'";
 	return this.myTools.send('GET', 'files?q='+ encodeURIComponent(query) );	
 };
 
@@ -109,8 +111,33 @@ Drive.prototype.queryFile = function queryFile(query)
  */
 Drive.prototype.listAllFiles = function listAllFiles()
 {
-	var query = encodeURIComponent("mimeType!='application/vnd.google-apps.folder'");
-	return this.myTools.send('GET', 'files?q='+ query );
+	var query = "mimeType!='application/vnd.google-apps.folder'";
+	return this.myTools.send('GET', 'files?q='+ encodeURIComponent(query) );
+};
+
+/**
+ * List all files in a folder.
+ * 
+ * @param {string} [folderId] - [optional] Google Drive folder id. Default: 'root' 
+ * @return {Object} {
+  "kind": "drive#childList",
+  "etag": etag,
+  "selfLink": string,
+  "nextPageToken": string,
+  "nextLink": string,
+  "items": [
+    children Resource https://developers.google.com/drive/v2/reference/children#resource
+  ]
+}
+ */
+Drive.prototype.listFilesInFolder = function listFilesInFolder(folderId)
+{
+	folderId = folderId ? folderId : 'root';
+	var query = "mimeType!='application/vnd.google-apps.folder'";
+	query += " and '"+ folderId +"' in parents";
+	return this.myTools.send('GET', 'files?q='+encodeURIComponent(query));
+
+//	return this.myTools.send('GET', 'files/'+ folderId +'/children?q='+encodeURIComponent(query));
 };
 
 /**
@@ -189,6 +216,28 @@ Drive.prototype.moveFile = function moveFile(fileId, folderId)
 };
 
 /**
+ * Search for one or some folders
+ * Help for how to create a query string: https://developers.google.com/drive/web/search-parameters
+ * 
+ * @param {string} query - query string as describe in google drive api
+ * @return {Object} {
+  "kind": "drive#fileList",
+  "etag": etag,
+  "selfLink": string,
+  "nextPageToken": string,
+  "nextLink": string,
+  "items": [
+    files Resource https://developers.google.com/drive/v2/reference/files
+  ]
+}
+ */
+Drive.prototype.queryFolder = function queryFile(query)
+{
+	query = query ? "mimeType='application/vnd.google-apps.folder' and " + query : "mimeType='application/vnd.google-apps.folder'";
+	return this.myTools.send('GET', 'files?q='+ encodeURIComponent(query) );	
+};
+
+/**
  * Lists the user's folders.
  * 
  * @return {Object} {
@@ -204,12 +253,12 @@ Drive.prototype.moveFile = function moveFile(fileId, folderId)
  */
 Drive.prototype.listAllFolders = function listAllFolders()
 {
-	var query = encodeURIComponent("mimeType='application/vnd.google-apps.folder'");
-	return this.myTools.send('GET', 'files?q='+ query );
+	var query = "mimeType='application/vnd.google-apps.folder'";
+	return this.myTools.send('GET', 'files?q='+ encodeURIComponent(query) );
 };
 
 /**
- * List all elements (file or folder) in a folder.
+ * List all folders in a folder.
  * 
  * @param {string} [folderId] - [optional] Google Drive folder id. Default: 'root' 
  * @return {Object} {
@@ -223,14 +272,16 @@ Drive.prototype.listAllFolders = function listAllFolders()
   ]
 }
  */
-Drive.prototype.listElementsInFolder = function listElementsInFolder(folderId)
+Drive.prototype.listFolderInFolder = function listFolderInFolder(folderId)
 {
 	folderId = folderId ? folderId : 'root';
-	return this.myTools.send('GET', 'files/'+ folderId +'/children');
+	var query = "mimeType='application/vnd.google-apps.folder'";
+	query += " and '"+ folderId +"' in parents";
+	return this.myTools.send('GET', 'files/'+ folderId +'/children?q='+encodeURIComponent(query));
 };
 
 /**
- * List all elements (file or folder) in a folder.
+ * Create a folder in root directory (default) or in another folder.
  * 
  * @param {string} folderName - Google Drive folder name
  * @param {string} [folderId] - [optional] Google Drive folder id. Default: 'root' 
