@@ -1,4 +1,4 @@
-var token = require( './token' );
+var config = require( './config' );
 
 /**
  * GoogleDrive constructor. Starting point to use the googleDrive API.
@@ -9,6 +9,14 @@ var Drive = function()
 	this.myTools = new Tools('https://www.googleapis.com/drive/v2/');
 };
 module.exports = Drive;
+
+/**
+ * Returns the download folder.
+ * By default, it's a /tmp/ folder in the project.
+ * 
+ * See definition in config.js
+ */
+Drive.prototype.getDownloadFolder = config.getDownloadFolder;
 
 /**
  * Set the access_token retrieved from oauth2 authentification. Better for one shot or tests.
@@ -28,7 +36,7 @@ Drive.prototype.setAccessToken = function setAccessToken(access_token)
  */
 Drive.prototype.useAccessTokenGetter = function useAccessTokenGetter()
 {
-	this.myTools.setAccessTokenGetter(token);
+	this.myTools.setAccessTokenGetter(config);
 };
 
 /**
