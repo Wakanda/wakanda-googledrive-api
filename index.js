@@ -344,10 +344,13 @@ Drive.prototype.untrashFolder = function untrashFolder(folderId)
 	return this.myTools.send('POST', 'files/'+ folderId +'/untrash');	
 };
 
-/*
-// TODO to check
+/**
+ * Download a file
+ * 
+ * @param {string} fileId - Google Drive file ID
+ * @return {Object} File resource description
+ */
 Drive.prototype.downloadFile = function downloadFile(fileId)
 {
-	return this.myTools.send('GET', 'files/'+ fileId + "?alt=media", null, true);
+	return this.myTools.send('GET', 'files/'+ fileId + "?alt=media", {binary:true});
 };
-*/

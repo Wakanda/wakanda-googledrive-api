@@ -44,20 +44,23 @@ Tools.prototype.setAccessTokenGetter = function setAccessTokenGetter(module)
 Tools.prototype.send = function send(method, url, params)
 {
     var body = '';
+    var binary = false;
 	if (params)
 	{
 		body = params.body ? JSON.stringify(params.body) : '';
+		binary = params.binary ? params.binary : false;
 	}
     var token = this.access_token_getter ? this.access_token_getter.getToken() : this.access_token;
-	var xhr = new XMLHttpRequest();
-	
+
+	// Set the request
+	var xhr = new XMLHttpRequest();	
     xhr.open( method , this.baseUrl + url, false );
    	xhr.setRequestHeader( 'Authorization' , 'Bearer '+ token);
     xhr.setRequestHeader( 'Content-Type' , 'application/json' );
-    xhr.send(body);
 	 
-    /*
-    if(binary){
+    // Handle Download
+    if(binary)
+    {
     	xhr.responseType = 'blob';
     }
     xhr.send(body);
@@ -76,7 +79,7 @@ Tools.prototype.send = function send(method, url, params)
 			buffer : xhr.response.toBuffer(),
 			contentType : xhr.getResponseHeader("Content-Type")
 		};
-	}*/
+	}
 	
     if (xhr.responseText)
 	   return JSON.parse( xhr.responseText );
