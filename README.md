@@ -3,7 +3,7 @@
 A SSJS module for wakanda which provides a Google Drive connector through SSJS APIs.
 This module requires `wakanda-oauth2` for authentification.
 
-##How To
+## How To
 
 1- Copy all files in `Modules/googledrive-api` folder.
 
@@ -25,7 +25,40 @@ myDrive.setAccessToken(myAccessToken);
 
 // List all files in google drive
 var myAllFiles = myDrive.listAllFiles();
+```
 
+## Settings
+
+You can customize some parameters in config.js:
+
+```javascript
+/**
+ * Returns the oauth2 token.
+ * By default, it's store in sessionStorage["OAUTH2_TOKEN"];
+ * 
+ * @param {string} access_token
+ */
+exports.getToken = function getToken()
+{
+	return sessionStorage["OAUTH2_TOKEN"];
+};
+
+/**
+ * Returns the download folder.
+ * By default, it's a /tmp/ folder in the project.
+ * 
+ * @param {string} download_folder_path
+ */
+exports.getDownloadFolder = function getDownloadFolder()
+{
+	return "/PROJECT/tmp/";
+};
+
+```
+
+## API Examples
+
+```javascript
 // Create a new file
 var myCreatedFile = myDrive.createFile('createdFile.js');
 
