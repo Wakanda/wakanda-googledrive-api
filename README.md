@@ -7,7 +7,9 @@ This module requires `wakanda-oauth2` for authentification.
 
 1- Copy all files in `Modules/googledrive-api` folder.
 
-2- In a SSJS file (ex: `test.js`), add:
+2- Add in `/Modules/oauth2-provider-google/client.json` the scope `https://www.googleapis.com/auth/drive`
+
+3- In a SSJS file (ex: `test.js`), add:
 
 ```javascript
 // For test needs, it is possible to get an access_token through google playground: https://developers.google.com/oauthplayground/
