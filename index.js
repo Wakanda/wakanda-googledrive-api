@@ -6,7 +6,7 @@ var config = require( './config' );
 var Drive = function()
 {
 	var Tools = require('./tools');
-	this.myTools = new Tools('https://www.googleapis.com/drive/v2/');
+	this.myTools = new Tools('https://www.googleapis.com/drive/v2/', 'https://www.googleapis.com/upload/drive/v2/');
 };
 module.exports = Drive;
 
@@ -192,20 +192,36 @@ Drive.prototype.renameFile = function renameFile(fileId, fileName)
 };
 
 /**
- * Create an empty file.
+ * Create an empty file or upload a file.
  * 
- * @param {string} [fileName] - [optional] Google Drive file name (ex: fibonacci.js). Default: 'Untitled' 
- * @param {string} [folderId] - [optional] Google Drive folder id. Default: 'root' 
+ * @param {Object} [params] - [optional]
+ * @param {string} [params.fileName] - [optional] Google Drive file name (ex: fibonacci.js). Default: 'Untitled' 
+ * @param {string} [params.folderId] - [optional] Google Drive folder id where add the file. Default: 'root' 
+ * @param {string} [params.filePath] - [optional] file path to upload
  * @return {Object} File resource description - https://developers.google.com/drive/v2/reference/files
  */
-Drive.prototype.createFile = function createFile(fileName, folderId)
+Drive.prototype.createFile = function createFile(params)
 {
 	var requestBody = {};
-	if (fileName)
-		requestBody.title = decodeURIComponent(fileName);
-	if (folderId)
-		requestBody.parents = [{'id': decodeURIComponent(folderId)}];
+	if (params)
+	{
+		if (params.fileName)
+			requestBody.title = decodeURIComponent(params.fileName);
+		if (params.folderId)
+			requestBody.parents = [{'id': decodeURIComponent(params.folderId)}];
 		
+		// Create a file and fill it with an upload
+		if (params.filePath)
+		{
+			var file = File(params.filePath);
+			if (!file.exists)
+				throw {error: 'File does not exist or is not reachable by the fileSystem.'}
+
+			return this.myTools.upload('POST', 'files?uploadType=multipart', {'body': requestBody, 'file': file});
+		}		
+	}
+	
+	// Create an empty file
 	return this.myTools.send('POST', 'files', {'body':requestBody});
 };
 
@@ -360,5 +376,5 @@ Drive.prototype.untrashFolder = function untrashFolder(folderId)
  */
 Drive.prototype.downloadFile = function downloadFile(fileId)
 {
-	return this.myTools.send('GET', 'files/'+ fileId + "?alt=media", {binary:true});
+	return this.myTools.send('GET', 'files/'+ fileId + '?alt=media', {binary:true});
 };

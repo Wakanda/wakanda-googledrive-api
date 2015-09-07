@@ -4,9 +4,10 @@
  * 
  * @param {string} [baseUrl] - Set the baseUrl for XHR request to Google Drive API. Default: https://www.googleapis.com/drive/v2/
  */
-var Tools = function(myBaseUrl)
+var Tools = function(myBaseUrl, myUploadUrl)
 {
     this.baseUrl = myBaseUrl ? myBaseUrl : 'https://www.googleapis.com/drive/v2/';
+    this.uploadUrl = myUploadUrl ? myUploadUrl : 'https://www.googleapis.com/upload/drive/v2/';
 };
 module.exports = Tools;
 
@@ -45,12 +46,12 @@ Tools.prototype.send = function send(method, url, params)
 {
     var body = '';
     var binary = false;
+    var token = this.access_token_getter ? this.access_token_getter.getToken() : this.access_token;
 	if (params)
 	{
 		body = params.body ? JSON.stringify(params.body) : '';
 		binary = params.binary ? params.binary : false;
 	}
-    var token = this.access_token_getter ? this.access_token_getter.getToken() : this.access_token;
 
 	// Set the request
 	var xhr = new XMLHttpRequest();	
@@ -63,8 +64,11 @@ Tools.prototype.send = function send(method, url, params)
     {
     	xhr.responseType = 'blob';
     }
+    
+    // Send request
     xhr.send(body);
 	
+	// Handle redirection
 	if(binary){
 		
 		if ([301, 302, 303, 307, 308].indexOf(xhr.status) > -1) {
@@ -81,6 +85,79 @@ Tools.prototype.send = function send(method, url, params)
 		};
 	}
 	
+	// Return result
+    if (xhr.responseText)
+	   return JSON.parse( xhr.responseText );
+};
+
+/**
+ * Send XHR request to googleDrive with parameters
+ * 
+ * @param {string} method - method (POST, GET, PUT, DELETE)
+ * @param {string} url - XHR url with parameters
+ * @param {Object} params
+ * @param {file} params.file - file to upload
+ * @param {Object} params.body - [optional] contains fileName and folderId
+ * 
+ * @return {Object} response - the JSON.parse XHR response
+ */
+Tools.prototype.upload = function upload(method, url, params)
+{
+	
+	if (params.file.size > 5000000)
+		throw {error: 'file size to upload exced 5Mo.'}
+	
+	var translator = {
+		pdf: 'application/pdf',
+		json: 'application/json',
+		js: 'application/javascript',
+		zip: 'application/zip',
+		gif: 'image/gif',
+		jpg: 'image/jpeg',
+		png: 'image/png',
+		txt: 'text/plain',
+		mpeg: 'video/mpeg',
+		mp4: 'video/mp4',
+		qt: 'video/quicktime',
+		doc: 'application/msword',
+		ppt: 'application/vnd.ms-powerpoint',
+		xls: 'application/vnd.ms-excel'
+	};
+	var fileExtension = translator[params.file.extension];
+debugger;
+    var body = '';
+	if (params)
+	{
+		body = params.body ? params.body : '';
+		if (!params.body.title)
+			body.title = params.file.name;
+	}
+	body.mimeType = fileExtension; // TODO file.type should be used instead. But not working right now.
+	body = JSON.stringify(body);
+	
+    var token = this.access_token_getter ? this.access_token_getter.getToken() : this.access_token;
+	var boundary = '314159265358979323846';
+	var multipartRequestBody =
+		'\r\n--' + boundary +
+		'\r\nContent-Type: application/json'+
+		'\r\n\r\n' + body +
+		'\r\n--' + boundary +
+		'\r\nContent-Type: ' + fileExtension + // TODO file.type should be used instead. But not working right now.
+		'\r\nContent-Transfer-Encoding: base64' +
+		'\r\n\r\n' + params.file.toBuffer().toString('base64') +
+		'\r\n--' + boundary + '--';
+		
+	// Set the request
+	var xhr = new XMLHttpRequest();	
+    xhr.open( method , this.uploadUrl + url, false );
+   	xhr.setRequestHeader( 'Authorization' , 'Bearer '+ token);
+	xhr.setRequestHeader( 'Content-Type' , 'multipart/related; boundary="' + boundary + '"'); 
+	xhr.setRequestHeader( 'Content-Length' , multipartRequestBody.length);
+
+    // Send request
+    xhr.send(multipartRequestBody);
+    
+	// Return result
     if (xhr.responseText)
 	   return JSON.parse( xhr.responseText );
 };
