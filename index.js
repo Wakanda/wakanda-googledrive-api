@@ -192,12 +192,11 @@ Drive.prototype.renameFile = function renameFile(fileId, fileName)
 };
 
 /**
- * Create an empty file or upload a file.
+ * Create an empty file in root directory (default) or in another folder.
  * 
  * @param {Object} [params] - [optional]
  * @param {string} [params.fileName] - [optional] Google Drive file name (ex: fibonacci.js). Default: 'Untitled' 
  * @param {string} [params.folderId] - [optional] Google Drive folder id where add the file. Default: 'root' 
- * @param {string} [params.filePath] - [optional] file path to upload
  * @return {Object} File resource description - https://developers.google.com/drive/v2/reference/files
  */
 Drive.prototype.createFile = function createFile(params)
@@ -209,16 +208,6 @@ Drive.prototype.createFile = function createFile(params)
 			requestBody.title = decodeURIComponent(params.fileName);
 		if (params.folderId)
 			requestBody.parents = [{'id': decodeURIComponent(params.folderId)}];
-		
-		// Create a file and fill it with an upload
-		if (params.filePath)
-		{
-			var file = File(params.filePath);
-			if (!file.exists)
-				throw {error: 'File does not exist or is not reachable by the fileSystem.'}
-
-			return this.myTools.upload('POST', 'files?uploadType=multipart', {'body': requestBody, 'file': file});
-		}		
 	}
 	
 	// Create an empty file
@@ -307,19 +296,23 @@ Drive.prototype.listFolderInFolder = function listFolderInFolder(folderId)
 /**
  * Create a folder in root directory (default) or in another folder.
  * 
- * @param {string} folderName - Google Drive folder name
- * @param {string} [folderId] - [optional] Google Drive folder id. Default: 'root' 
+ * @param {Object} [params] - [optional]
+ * @param {string} [params.folderName] - [optional] Google Drive folder name
+ * @param {string} [params.folderId] - [optional] Google Drive folder id. Default: 'root' 
  * @return {Object} File resource description - https://developers.google.com/drive/v2/reference/files
  */
-Drive.prototype.createFolder = function createFolder(folderName, folderId)
+Drive.prototype.createFolder = function createFolder(params)
 {
 	var requestBody = {
-		'title': decodeURIComponent(folderName),
 		'mimeType': 'application/vnd.google-apps.folder'
 	};
-	if (folderId)
-		requestBody.parents = [{'id': decodeURIComponent(folderId)}];
-		
+	if (params)
+	{
+		if (params.folderName)
+			requestBody.title = decodeURIComponent(params.folderName);
+		if (params.folderId)
+			requestBody.parents = [{'id': decodeURIComponent(params.folderId)}];
+	}
 	return this.myTools.send('POST', 'files', {'body':requestBody});
 };
 

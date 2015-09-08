@@ -60,7 +60,7 @@ exports.getDownloadFolder = function getDownloadFolder()
 
 ```javascript
 // Create a new file
-var myCreatedFile = myDrive.createFile('createdFile.js');
+var myCreatedFile = myDrive.createFile({fileName: 'createdFile.js'});
 
 // Get a file metadata 
 var myGettedFile = myDrive.getFile(myCreatedFile.id);
@@ -83,18 +83,18 @@ myDrive.trashFile(myCreatedFile.id);
 myDrive.emptyTrash();
 
 // List all elements
-var myAllElementsInRoot = myDrive.listElementsInFolder();
-var myAllElementsInFolder = myDrive.listElementsInFolder('0B4SscfHkBrxJZEtsaU90OGR1Qmc');
+var myAllElementsInRoot = myDrive.listFilesInFolder();
+var myAllElementsInFolder = myDrive.listFilesInFolder('0B4SscfHkBrxJZEtsaU90OGR1Qmc');
 
 // Create a folder
-var myCreatedFolderInRoot = myDrive.createFolder('createdFolder');
-var myCreatedFolderInFolder = myDrive.createFolder('createdFolder', myCreatedFolderInRoot.id);
+var myCreatedFolderInRoot = myDrive.createFolder({folderName: 'createdFolder'});
+var myCreatedFolderInFolder = myDrive.createFolder({folderName: 'createdFolder', folderId: myCreatedFolderInRoot.id});
 
 // Rename a folder
 var myRenamedFolder = myDrive.renameFolder(myCreatedFolderInRoot.id, 'renamedFolder');
 
 // Move a file
-var myCreatedFileInFolder = myDrive.createFile('movedFile.js', myRenamedFolder.id);
+var myCreatedFileInFolder = myDrive.createFile({fileName: 'movedFile.js', folderId: myRenamedFolder.id});
 var myMovedFileInFolder = myDrive.moveFile(myCreatedFileInFolder.id, myCreatedFolderInFolder.id);
 var myMovedFileInRoot = myDrive.moveFile(myCreatedFileInFolder.id);
 
