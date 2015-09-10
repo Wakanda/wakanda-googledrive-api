@@ -17,7 +17,7 @@ This module requires `wakanda-oauth2` for authentification.
 var myAccessToken = 'ya29.vgEbLQ1r0sUK_2QwKW6W0Af9_YLon4HGFekL1g2htKbihz8bp36oSimHCQYaPjQGictt';
 
 // Require the "googledrive-api" module
-var Drive = require('googledrive-api');
+var Drive = require('wakanda-googledrive-api');
 var myDrive = new Drive();
 
 // Set the access_token given by "wakanda_oauth2" module
