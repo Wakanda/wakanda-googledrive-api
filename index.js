@@ -11,14 +11,6 @@ var Drive = function()
 module.exports = Drive;
 
 /**
- * Returns the download folder.
- * By default, it's a /tmp/ folder in the project.
- * 
- * See definition in config.js
- */
-Drive.prototype.getDownloadFolder = config.getDownloadFolder;
-
-/**
  * Set the access_token retrieved from oauth2 authentification. Better for one shot or tests.
  * For long run, it's preferable to use useAccessTokenGetter() instead.
  * 

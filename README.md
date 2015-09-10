@@ -43,17 +43,6 @@ exports.getToken = function getToken()
 	return sessionStorage["OAUTH2_TOKEN"];
 };
 
-/**
- * Returns the download folder.
- * By default, it's a /tmp/ folder in the project.
- * 
- * @param {string} download_folder_path
- */
-exports.getDownloadFolder = function getDownloadFolder()
-{
-	return "/PROJECT/tmp/";
-};
-
 ```
 
 ## API Examples
@@ -104,4 +93,11 @@ var myUntrashedFolder = myDrive.untrashFolder(myTrashedFolder.id);
 
 // Delete a folder
 myDrive.deleteFolder(myRenamedFolder.id);
+
+// Upload
+var myFile = File('/PROJECT/upload/myImg.jpg');
+myDrive.uploadFile(myFile);
+
+// Download
+myDrive.downloadFile(fileId);
 ```
