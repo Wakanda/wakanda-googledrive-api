@@ -78,7 +78,7 @@ Tools.prototype.send = function send(method, url, params)
 	    if ((xhr.status !== 200) || !xhr.response ||  !xhr.response.size) {
 	        return null;
 	    }
-		
+
 		return {
 			buffer : xhr.response.toBuffer(),
 			contentType : xhr.getResponseHeader("Content-Type")
@@ -124,7 +124,7 @@ Tools.prototype.upload = function upload(method, url, params)
 		xls: 'application/vnd.ms-excel'
 	};
 	var fileExtension = translator[params.file.extension];
-debugger;
+
     var body = '';
 	if (params)
 	{

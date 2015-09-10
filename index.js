@@ -371,3 +371,28 @@ Drive.prototype.downloadFile = function downloadFile(fileId)
 {
 	return this.myTools.send('GET', 'files/'+ fileId + '?alt=media', {binary:true});
 };
+
+/**
+ * Upload a file.
+ * 
+ * @param {File} file - file to upload
+ * @param {Object} [params] - [optional]
+ * @param {string} [params.fileName] - [optional] Google Drive file name (ex: fibonacci.js). Default: 'Untitled' 
+ * @param {string} [params.folderId] - [optional] Google Drive folder id where add the file. Default: 'root' 
+ * @return {Object} File resource description - https://developers.google.com/drive/v2/reference/files
+ */
+Drive.prototype.uploadFile = function uploadFile(file, params)
+{
+	if (!file.exists)
+		throw {error: 'File does not exist or is not reachable by the systemFolder.'}
+	
+	var requestBody = {};
+	if (params)
+	{
+		if (params.fileName)
+			requestBody.title = decodeURIComponent(params.fileName);
+		if (params.folderId)
+			requestBody.parents = [{'id': decodeURIComponent(params.folderId)}];
+	}
+	return this.myTools.upload('POST', 'files?uploadType=multipart', {'body': requestBody, 'file': file});
+};
