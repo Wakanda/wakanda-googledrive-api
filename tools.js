@@ -6,8 +6,8 @@
  */
 var Tools = function(myBaseUrl, myUploadUrl)
 {
-    this.baseUrl = myBaseUrl ? myBaseUrl : 'https://www.googleapis.com/drive/v2/';
-    this.uploadUrl = myUploadUrl ? myUploadUrl : 'https://www.googleapis.com/upload/drive/v2/';
+	this.baseUrl = myBaseUrl ? myBaseUrl : 'https://www.googleapis.com/drive/v2/';
+	this.uploadUrl = myUploadUrl ? myUploadUrl : 'https://www.googleapis.com/upload/drive/v2/';
 };
 module.exports = Tools;
 
@@ -44,9 +44,9 @@ Tools.prototype.setAccessTokenGetter = function setAccessTokenGetter(module)
  */
 Tools.prototype.send = function send(method, url, params)
 {
-    var body = '';
-    var binary = false;
-    var token = this.access_token_getter ? this.access_token_getter.getToken() : this.access_token;
+	var body = '';
+	var binary = false;
+	var token = this.access_token_getter ? this.access_token_getter.getToken() : this.access_token;
 	if (params)
 	{
 		body = params.body ? JSON.stringify(params.body) : '';
@@ -55,29 +55,29 @@ Tools.prototype.send = function send(method, url, params)
 
 	// Set the request
 	var xhr = new XMLHttpRequest();	
-    xhr.open( method , this.baseUrl + url, false );
-   	xhr.setRequestHeader( 'Authorization' , 'Bearer '+ token);
-    xhr.setRequestHeader( 'Content-Type' , 'application/json' );
-	 
-    // Handle Download
-    if(binary)
-    {
-    	xhr.responseType = 'blob';
-    }
-    
-    // Send request
-    xhr.send(body);
+	xhr.open( method , this.baseUrl + url, false );
+	xhr.setRequestHeader( 'Authorization' , 'Bearer '+ token);
+	xhr.setRequestHeader( 'Content-Type' , 'application/json' );
+	
+	// Handle Download
+	if(binary)
+	{
+		xhr.responseType = 'blob';
+	}
+	
+	// Send request
+	xhr.send(body);
 	
 	// Handle redirection
 	if(binary){
 		
 		if ([301, 302, 303, 307, 308].indexOf(xhr.status) > -1) {
-	        url = xhr.getResponseHeader('Location');
-	        return this.send(params);
-	    }
-	    if ((xhr.status !== 200) || !xhr.response ||  !xhr.response.size) {
-	        return null;
-	    }
+			url = xhr.getResponseHeader('Location');
+			return this.send(params);
+		}
+		if ((xhr.status !== 200) || !xhr.response ||  !xhr.response.size) {
+			return null;
+		}
 
 		return {
 			buffer : xhr.response.toBuffer(),
@@ -86,8 +86,8 @@ Tools.prototype.send = function send(method, url, params)
 	}
 	
 	// Return result
-    if (xhr.responseText)
-	   return JSON.parse( xhr.responseText );
+	if (xhr.responseText)
+		return JSON.parse( xhr.responseText );
 };
 
 /**
@@ -125,7 +125,7 @@ Tools.prototype.upload = function upload(method, url, params)
 	};
 	var fileExtension = translator[params.file.extension];
 
-    var body = '';
+	var body = '';
 	if (params)
 	{
 		body = params.body ? params.body : '';
@@ -135,7 +135,7 @@ Tools.prototype.upload = function upload(method, url, params)
 	body.mimeType = fileExtension; // TODO file.type should be used instead. But not working right now.
 	body = JSON.stringify(body);
 	
-    var token = this.access_token_getter ? this.access_token_getter.getToken() : this.access_token;
+	var token = this.access_token_getter ? this.access_token_getter.getToken() : this.access_token;
 	var boundary = '314159265358979323846';
 	var multipartRequestBody =
 		'\r\n--' + boundary +
@@ -149,17 +149,17 @@ Tools.prototype.upload = function upload(method, url, params)
 		
 	// Set the request
 	var xhr = new XMLHttpRequest();	
-    xhr.open( method , this.uploadUrl + url, false );
-   	xhr.setRequestHeader( 'Authorization' , 'Bearer '+ token);
+	xhr.open( method , this.uploadUrl + url, false );
+	xhr.setRequestHeader( 'Authorization' , 'Bearer '+ token);
 	xhr.setRequestHeader( 'Content-Type' , 'multipart/related; boundary="' + boundary + '"'); 
 	xhr.setRequestHeader( 'Content-Length' , multipartRequestBody.length);
 
-    // Send request
-    xhr.send(multipartRequestBody);
-    
+	// Send request
+	xhr.send(multipartRequestBody);
+	
 	// Return result
-    if (xhr.responseText)
-	   return JSON.parse( xhr.responseText );
+	if (xhr.responseText)
+		return JSON.parse( xhr.responseText );
 };
 
 /**
@@ -172,9 +172,9 @@ Tools.prototype.upload = function upload(method, url, params)
 Tools.prototype.jsonToUrlString = function jsonToUrlString( params )
 {
 	var body = '';
-    for ( var key in params )
-    {
-    	body += key + '=' + encodeURIComponent( params[ key ] ) + '&'
-    }
-    return body;
+	for ( var key in params )
+	{
+		body += key + '=' + encodeURIComponent( params[ key ] ) + '&'
+	}
+	return body;
 };
