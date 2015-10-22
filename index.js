@@ -22,8 +22,18 @@ Drive.prototype.setAccessToken = function setAccessToken(access_token)
 };
 
 /**
- * Get the access_token from token.js/getToken(). Can be use to handle the oauth2 authentification
- * You can update the way you retreive the access_token in token.js/getToken()
+ * Set the max_results. Number of files returned by Google Drive in one query
+ * 
+ * @param {number} max_results - Google Drive default is 100. Google Drive max is 1000.
+ */
+Drive.prototype.setMaxResults = function setMaxResults(max_results)
+{
+	this.max_results = max_results;
+};
+
+/**
+ * Get the access_token from config.js/getToken(). Can be use to handle the oauth2 authentification
+ * You can update the way you retreive the access_token in config.js/getToken()
  * For one shot or tests, it's easier to use setAccessToken() instead.
  */
 Drive.prototype.useAccessTokenGetter = function useAccessTokenGetter()
@@ -96,29 +106,14 @@ Drive.prototype.queryFile = function queryFile(query)
 };
 
 /**
- * Lists the user's files.
+ * Get first file/folder page.
+ * Limited by Google Drive default is 100. Can be update by setMaxResults().
+ * Use 'nextPageToken' returned and 'getNextElements()' for more files/folders.
  * 
- * @return {Object} {
-  "kind": "drive#fileList",
-  "etag": etag,
-  "selfLink": string,
-  "nextPageToken": string,
-  "nextLink": string,
-  "items": [
-    files Resource https://developers.google.com/drive/v2/reference/files
-  ]
-}
- */
-Drive.prototype.listAllFiles = function listAllFiles()
-{
-	var query = "mimeType!='application/vnd.google-apps.folder'";
-	return this.myTools.send('GET', 'files?q='+ encodeURIComponent(query) );
-};
-
-/**
- * List all files in a folder.
- * 
- * @param {string} [folderId] - [optional] Google Drive folder id. Default: 'root' 
+ * @param {Object} [params] - [optional] 
+ * @param {string} [params.folderId] - [optional] Google Drive folder id. Accepts 'root' as folderId.
+ * @param {boolean} [params.onlyFiles] - [optional] Get only folder list
+ * @param {boolean} [params.onlyFolders] - [optional] Get only file list.
  * @return {Object} {
   "kind": "drive#childList",
   "etag": etag,
@@ -130,14 +125,60 @@ Drive.prototype.listAllFiles = function listAllFiles()
   ]
 }
  */
-Drive.prototype.listFilesInFolder = function listFilesInFolder(folderId)
+Drive.prototype.getElements = function getElements(params)
 {
-	folderId = folderId ? folderId : 'root';
-	var query = "mimeType!='application/vnd.google-apps.folder'";
-	query += " and '"+ folderId +"' in parents";
-	return this.myTools.send('GET', 'files?q='+encodeURIComponent(query));
+	var url = 'files';
+	var query = "";
+	
+	if (params)
+	{
+		if (params.onlyFiles)
+		{
+			query += query.length == 0 ? "" : " and ";
+			query += "mimeType!='application/vnd.google-apps.folder'";
+		}
+		
+		if (params.onlyFolders)
+		{
+			query += query.length == 0 ? "" : " and ";
+			query += "mimeType='application/vnd.google-apps.folder'";
+		}
 
-//	return this.myTools.send('GET', 'files/'+ folderId +'/children?q='+encodeURIComponent(query));
+		if (params.folderId)
+		{
+			query += query.length == 0 ? "" : " and ";
+			query += "'"+ params.folderId +"' in parents";
+		}
+		
+		url += '?q=' + encodeURIComponent(query);
+		
+		if (this.max_results)
+		{
+			url += '&maxResults=' + this.max_result;
+		}
+	}
+	
+	return this.myTools.send('GET', url);
+};
+
+/**
+ * Get next file/folder page.
+ * 
+ * @param {string} nextPageToken - Google Drive nextPageToken
+ * @return {Object} {
+  "kind": "drive#fileList",
+  "etag": etag,
+  "selfLink": string,
+  "nextPageToken": string,
+  "nextLink": string,
+  "items": [
+    files Resource https://developers.google.com/drive/v2/reference/files
+  ]
+}
+ */
+Drive.prototype.getNextElements = function getNextElements(nextPageToken)
+{
+	return this.myTools.send('GET', 'files?pageToken='+nextPageToken );
 };
 
 /**
@@ -240,49 +281,6 @@ Drive.prototype.queryFolder = function queryFile(query)
 {
 	query = query ? "mimeType='application/vnd.google-apps.folder' and " + query : "mimeType='application/vnd.google-apps.folder'";
 	return this.myTools.send('GET', 'files?q='+ encodeURIComponent(query) );	
-};
-
-/**
- * Lists the user's folders.
- * 
- * @return {Object} {
-  "kind": "drive#fileList",
-  "etag": etag,
-  "selfLink": string,
-  "nextPageToken": string,
-  "nextLink": string,
-  "items": [
-    files Resource https://developers.google.com/drive/v2/reference/files
-  ]
-}
- */
-Drive.prototype.listAllFolders = function listAllFolders()
-{
-	var query = "mimeType='application/vnd.google-apps.folder'";
-	return this.myTools.send('GET', 'files?q='+ encodeURIComponent(query) );
-};
-
-/**
- * List all folders in a folder.
- * 
- * @param {string} [folderId] - [optional] Google Drive folder id. Default: 'root' 
- * @return {Object} {
-  "kind": "drive#childList",
-  "etag": etag,
-  "selfLink": string,
-  "nextPageToken": string,
-  "nextLink": string,
-  "items": [
-    children Resource https://developers.google.com/drive/v2/reference/children#resource
-  ]
-}
- */
-Drive.prototype.listFolderInFolder = function listFolderInFolder(folderId)
-{
-	folderId = folderId ? folderId : 'root';
-	var query = "mimeType='application/vnd.google-apps.folder'";
-	query += " and '"+ folderId +"' in parents";
-	return this.myTools.send('GET', 'files/'+ folderId +'/children?q='+encodeURIComponent(query));
 };
 
 /**

@@ -23,8 +23,8 @@ var myDrive = new Drive();
 // Set the access_token given by "wakanda_oauth2" module
 myDrive.setAccessToken(myAccessToken);
 
-// List all files in google drive
-var myAllFiles = myDrive.listAllFiles();
+// Get first files/folders page in google drive
+var myElements = myDrive.getElements();
 ```
 
 ## Settings
@@ -71,9 +71,17 @@ myDrive.untrashFile(myCreatedFile.id);
 myDrive.trashFile(myCreatedFile.id);
 myDrive.emptyTrash();
 
-// List all elements
-var myAllElementsInRoot = myDrive.listFilesInFolder();
-var myAllElementsInFolder = myDrive.listFilesInFolder('0B4SscfHkBrxJZEtsaU90OGR1Qmc');
+// Get first element page
+var myElementsInRoot = myDrive.getElements({folderId: 'root'});
+var myElementsInFolder = myDrive.getElements({folderId: '0B4SscfHkBrxJZEtsaU90OGR1Qmc'});
+
+// Get first file/folder page
+var myFirstFiles = myDrive.getElements({onlyFiles: true});
+var myFirstFolders = myDrive.getElements({onlyFolders: true});
+
+// Get next file/folder page
+var myNextFiles = myDrive.getNextElements(myFirstFiles.nextPageToken);
+var myNextFolders = myDrive.getNextElements(myFirstFolders.nextPageToken);
 
 // Create a folder
 var myCreatedFolderInRoot = myDrive.createFolder({folderName: 'createdFolder'});

@@ -14,7 +14,7 @@ module.exports = Tools;
 /**
  * Set the access_token retrieved from oauth2 authentification
  * 
- * @param {string} token - access_token
+ * @param {string} token - Set this.access_token
  */
 Tools.prototype.setAccessToken = function setAccessToken(token)
 {
@@ -22,9 +22,9 @@ Tools.prototype.setAccessToken = function setAccessToken(token)
 };
 
 /**
- * Set the access_token getter defined in token.js
+ * Set the access_token getter defined in config.js
  * 
- * @param {string} token - access_token
+ * @param {string} token - Set this.access_token_getter
  */
 Tools.prototype.setAccessTokenGetter = function setAccessTokenGetter(module)
 {
@@ -55,7 +55,7 @@ Tools.prototype.send = function send(method, url, params)
 
 	// Set the request
 	var xhr = new XMLHttpRequest();	
-	xhr.open( method , this.baseUrl + url, false );
+	xhr.open( method , this.baseUrl + url , false );
 	xhr.setRequestHeader( 'Authorization' , 'Bearer '+ token);
 	xhr.setRequestHeader( 'Content-Type' , 'application/json' );
 	
