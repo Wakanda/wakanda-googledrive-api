@@ -374,7 +374,7 @@ Drive.prototype.downloadFile = function downloadFile(fileId)
 Drive.prototype.uploadFile = function uploadFile(file, params)
 {
 	if (!file.exists)
-		throw {error: 'File does not exist or is not reachable by the systemFolder.'}
+		return {error: 'file_does_not_exist', error_description: 'File does not exist or is not reachable by the systemFolder.'};
 	
 	var requestBody = {};
 	if (params)

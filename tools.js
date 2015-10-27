@@ -66,7 +66,14 @@ Tools.prototype.send = function send(method, url, params)
 	}
 	
 	// Send request
-	xhr.send(body);
+	try{
+		xhr.send(body);
+	}catch(e){
+		return {
+			error				: 'unreachable_url',
+			error_description	: 'XHR request GET https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=' + token + ' failed'
+		};
+	}
 	
 	// Handle redirection
 	if(binary){
@@ -105,7 +112,7 @@ Tools.prototype.upload = function upload(method, url, params)
 {
 	
 	if (params.file.size > 5000000)
-		throw {error: 'file size to upload exced 5Mo.'}
+		return {error: 'file_too_big', error_description: 'file size to upload exced 5Mo.'};
 	
 	var translator = {
 		pdf: 'application/pdf',
@@ -155,7 +162,14 @@ Tools.prototype.upload = function upload(method, url, params)
 	xhr.setRequestHeader( 'Content-Length' , multipartRequestBody.length);
 
 	// Send request
-	xhr.send(multipartRequestBody);
+	try{
+		xhr.send(multipartRequestBody);
+	}catch(e){
+		return {
+			error				: 'unreachable_url',
+			error_description	: 'XHR request GET https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=' + token + ' failed'
+		};
+	}
 	
 	// Return result
 	if (xhr.responseText)

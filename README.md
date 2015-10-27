@@ -5,7 +5,7 @@ This module requires `wakanda-oauth2` for authentification.
 
 ## How To
 
-1- Copy all files in `Modules/googledrive-api` folder.
+1- Copy all files in `Modules/wakanda-googledrive-api` folder.
 
 2- Add in `/Modules/oauth2-provider-google/client.json` the scope `https://www.googleapis.com/auth/drive`
 
