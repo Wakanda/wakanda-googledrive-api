@@ -70,8 +70,10 @@ Tools.prototype.send = function send(method, url, params)
 		xhr.send(body);
 	}catch(e){
 		return {
-			error				: 'unreachable_url',
-			error_description	: 'XHR request GET https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=' + token + ' failed'
+			error: {
+				code	: 'unreachable_url',
+				message	: 'XHR request GET https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=' + token + ' failed'
+			}
 		};
 	}
 	
@@ -166,8 +168,10 @@ Tools.prototype.upload = function upload(method, url, params)
 		xhr.send(multipartRequestBody);
 	}catch(e){
 		return {
-			error				: 'unreachable_url',
-			error_description	: 'XHR request GET https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=' + token + ' failed'
+			error: {
+				code	: 'unreachable_url',
+				message	: 'XHR request GET https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=' + token + ' failed'
+			}
 		};
 	}
 	

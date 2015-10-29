@@ -1,6 +1,5 @@
 /**
- * Returns the oauth2 token.
- * By default, it's store in sessionStorage["OAUTH2_TOKEN"];
+ * How do you want to get your access_token ?
  * 
  * @param {string} access_token
  */

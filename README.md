@@ -29,12 +29,11 @@ var myElements = myDrive.getElements();
 
 ## Settings
 
-You can customize some parameters in config.js:
+If you do not want to use `wakanda-oauth2` SSJS modules, you can customize the config.js:
 
 ```javascript
 /**
- * Returns the oauth2 token.
- * By default, it's store in sessionStorage["OAUTH2_TOKEN"];
+ * How do you want to get your access_token ?
  * 
  * @param {string} access_token
  */
