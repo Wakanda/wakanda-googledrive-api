@@ -14,11 +14,14 @@ module.exports = Drive;
  * Set the access_token retrieved from oauth2 authentification. Better for one shot or tests.
  * For long run, it's preferable to use useAccessTokenGetter() instead.
  * 
- * @param {string} access_token
+ * @param {string} [access_token] - [Optionnal] Set the access_token. If no parameters, then use config.js/getToken()
  */
 Drive.prototype.setAccessToken = function setAccessToken(access_token)
 {
-	this.myTools.setAccessToken(access_token);
+	if (access_token)
+		this.myTools.setAccessToken(access_token);
+	else
+		this.myTools.setAccessTokenGetter(config);
 };
 
 /**
@@ -29,16 +32,6 @@ Drive.prototype.setAccessToken = function setAccessToken(access_token)
 Drive.prototype.setMaxResults = function setMaxResults(max_results)
 {
 	this.max_results = max_results;
-};
-
-/**
- * Get the access_token from config.js/getToken(). Can be use to handle the oauth2 authentification
- * You can update the way you retreive the access_token in config.js/getToken()
- * For one shot or tests, it's easier to use setAccessToken() instead.
- */
-Drive.prototype.useAccessTokenGetter = function useAccessTokenGetter()
-{
-	this.myTools.setAccessTokenGetter(config);
 };
 
 /**

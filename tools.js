@@ -46,7 +46,7 @@ Tools.prototype.send = function send(method, url, params)
 {
 	var body = '';
 	var binary = false;
-	var token = this.access_token_getter ? this.access_token_getter.getToken() : this.access_token;
+	var token = this.access_token_getter ? this.access_token_getter.getToken('google') : this.access_token;
 	if (params)
 	{
 		body = params.body ? JSON.stringify(params.body) : '';
